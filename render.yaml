@@ -1,15 +1,46 @@
 services:
+  # 1. Render Static Site — Frontend (React + Vite)
+  - type: static
+    name: sih-nivaran-frontend
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: sih-nivaran-backend
+          property: host
+
+  # 2. Render Web Service — Backend (Node.js + Express + Prisma)
   - type: web
-    name: sih-nivaran
+    name: sih-nivaran-backend
+    rootDir: server
     env: node
     plan: free
     region: oregon
-    buildCommand: npm run render:build
-    startCommand: npm run render:start
+    buildCommand: npm install && npm run prisma:generate && npm run prisma:push && npm run prisma:seed && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: JWT_SECRET
-        generateValue: true
       - key: DATABASE_URL
         value: "file:./dev.db"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        fromService:
+          type: static
+          name: sih-nivaran-frontend
+          property: host
+      - key: SMS_GATEWAY_URL
+        value: "https://mock-gateway.nic.in/sms/send"
+      - key: WHATSAPP_API_KEY
+        value: "mock_wa_secret_sih2026"
+      - key: IVR_WEBHOOK_URL
+        value: "https://mock-gateway.nic.in/ivr/outbound"

@@ -1,4 +1,15 @@
-const API_BASE = '/api/v1';
+// Base API URL configuration supporting Render Static Site + Web Service deployment
+const envApiUrl = import.meta.env.VITE_API_URL;
+let normalizedBase = envApiUrl ? String(envApiUrl).trim().replace(/\/+$/, '') : '';
+if (normalizedBase && !normalizedBase.startsWith('http://') && !normalizedBase.startsWith('https://')) {
+  normalizedBase = `https://${normalizedBase}`;
+}
+
+const API_BASE = normalizedBase
+  ? normalizedBase.endsWith('/api/v1')
+    ? normalizedBase
+    : `${normalizedBase}/api/v1`
+  : '/api/v1';
 
 export class ApiError extends Error {
   code: string;
