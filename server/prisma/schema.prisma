@@ -1,0 +1,335 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String
+  fullName     String
+  mobileNumber String    @unique
+  role         String    // FARMER, CENTRE_OPERATOR, CENTRE_MANAGER, QUALITY_OFFICER, WEIGHMENT_OPERATOR, FINANCE_OFFICER
+  centreId     String?
+  farmerId     String?   @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  farmer       Farmer?   @relation(fields: [farmerId], references: [farmerId])
+  centre       ProcurementCentre? @relation(fields: [centreId], references: [id])
+}
+
+model Farmer {
+  id                       String   @id @default(uuid())
+  farmerId                 String   @unique // e.g. "FARMER-HR-2026-101"
+  fullName                 String
+  mobileNumber             String   @unique
+  preferredLanguage        String   @default("en") // en, hi, pb
+  address                  String
+  district                 String
+  village                  String
+  landDetails              String   // JSON string: acreage, surveyNumber, irrigationType
+  bankName                 String
+  accountNumberMasked      String   // e.g. "XXXXXXXX4821"
+  ifscCode                 String
+  preferredProcurementCentre String?
+  isActive                 Boolean  @default(true)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  user                     User?
+  bookings                 Booking[]
+  procurements             ProcurementRecord[]
+  payments                 Payment[]
+}
+
+model ProcurementCentre {
+  id                      String   @id @default(uuid())
+  centreCode              String   @unique // e.g. "KNL-MANDI-01"
+  name                    String
+  address                 String
+  district                String
+  cropsSupported          String   // JSON string: ["Wheat", "Paddy", "Mustard"]
+  operatingHours          String   @default("08:00 - 18:00")
+  dailyCapacity           Float    // in Quintals
+  slotCapacity            Float    // in Quintals per slot
+  activeCounters          Int      @default(3)
+  weighbridgeAvailability Boolean  @default(true)
+  operatorAvailability   Boolean  @default(true)
+  averageServiceMinutes   Int      @default(15)
+  operationalStatus       String   @default("OPEN") // OPEN, LIMITED, PAUSED, CLOSED
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  users                   User[]
+  slots                   Slot[]
+  bookings                Booking[]
+  queueEntries            QueueEntry[]
+  procurements            ProcurementRecord[]
+  delays                  CentreDelay[]
+}
+
+model CropConfiguration {
+  id                      String   @id @default(uuid())
+  cropCode                String   @unique // e.g. "WHEAT-RABI-2026"
+  cropName                String   // Wheat
+  season                  String   // Rabi, Kharif, Zaid
+  procurementRatePerUnit  Float    // e.g. 2425.00 INR per Quintal
+  quantityUnit            String   @default("Quintal")
+  qualityParameters       String   // JSON string with min/max tolerances
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model Slot {
+  id                String   @id @default(uuid())
+  centreId          String
+  date              String   // YYYY-MM-DD
+  startTime         String   // 08:00
+  endTime           String   // 09:30
+  capacity          Float    // in Quintals
+  reservedQuantity  Float    @default(0.0)
+  bookedFarmerCount Int      @default(0)
+  availableQuantity Float
+  slotStatus        String   @default("AVAILABLE") // AVAILABLE, FULL, CLOSED, PAUSED
+  version           Int      @default(1)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  centre            ProcurementCentre @relation(fields: [centreId], references: [id])
+  bookings          Booking[]
+
+  @@unique([centreId, date, startTime])
+  @@index([centreId, date])
+}
+
+model Booking {
+  id                   String   @id @default(uuid())
+  bookingId            String   @unique // e.g. "BKG-2026-9482"
+  tokenId              String   @unique // e.g. "TKN-KNL-01-0042"
+  farmerId             String
+  centreId             String
+  crop                 String
+  requestedQuantity    Float
+  allocatedQuantity    Float
+  slotId               String
+  scheduledDateTime    DateTime
+  queueNumber          Int
+  queueStatus          String   @default("SCHEDULED") // NOT_STARTED, SCHEDULED, APPROACHING, CHECK_IN_OPEN, CHECKED_IN, WAITING, CALLED, PROCESSING, COMPLETED, DELAYED, RESCHEDULED
+  tokenStatus          String   @default("ACTIVE")    // ACTIVE, USED, DELAYED, EXTENDED, EXPIRED, CANCELLED, RESCHEDULED
+  validityStart        DateTime
+  validityEnd          DateTime
+  checkInTime          DateTime?
+  delayMinutes         Int      @default(0)
+  delayReason          String?
+  rescheduleInfo       String?  // JSON string
+  idempotencyKey       String?  @unique
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  farmer               Farmer             @relation(fields: [farmerId], references: [farmerId])
+  centre               ProcurementCentre  @relation(fields: [centreId], references: [id])
+  slot                 Slot               @relation(fields: [slotId], references: [id])
+  queueEntry           QueueEntry?
+  qualityAssay         QualityAssay?
+  weighment            Weighment?
+  quantityAdjustment   QuantityAdjustmentRequest?
+  procurementRecord    ProcurementRecord?
+
+  @@index([farmerId, scheduledDateTime])
+  @@index([centreId, scheduledDateTime])
+}
+
+model QueueEntry {
+  id                String    @id @default(uuid())
+  centreId          String
+  bookingId         String    @unique
+  tokenId           String    @unique
+  serviceDate       String    // YYYY-MM-DD
+  queueNumber       Int
+  counterNumber     Int?
+  priority          Int       @default(0) // 0 normal, 1 priority
+  status            String    @default("SCHEDULED") // SCHEDULED, CHECKED_IN, WAITING, CALLED, PROCESSING, COMPLETED, DELAYED, RESCHEDULED
+  estimatedCallTime DateTime?
+  actualCallTime    DateTime?
+  arrivalTime       DateTime?
+  completionTime    DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  centre            ProcurementCentre @relation(fields: [centreId], references: [id])
+  booking           Booking           @relation(fields: [bookingId], references: [id])
+
+  @@index([centreId, serviceDate, status])
+}
+
+model QualityAssay {
+  id               String   @id @default(uuid())
+  bookingId        String   @unique
+  tokenId          String   @unique
+  qualityOfficerId String
+  officerName      String
+  parameterResults String   // JSON string: moisture, foreignMatter, damagedGrains, etc.
+  grade            String   // GRADE_A, GRADE_B, GRADE_C, REJECTED
+  qualityStatus    String   // PENDING, TESTING, PASSED, FAILED, RETEST_REQUIRED
+  decisionReason   String
+  attachmentRef    String?
+  retestCount      Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  booking          Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model Weighment {
+  id                  String   @id @default(uuid())
+  bookingId           String   @unique
+  tokenId             String   @unique
+  weighmentOperatorId String
+  operatorName        String
+  grossWeight         Float    // in Quintals
+  tareWeight          Float    // in Quintals
+  netWeight           Float    // gross - tare
+  acceptedQuantity    Float
+  rejectedQuantity    Float    @default(0.0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  booking             Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model QuantityAdjustmentRequest {
+  id                           String    @id @default(uuid())
+  bookingId                    String    @unique
+  tokenId                      String    @unique
+  originalTokenQuantity        Float
+  verifiedQuantity             Float
+  additionalRequestedQuantity  Float
+  capacityCheckResult          String    // WITHIN_CAPACITY, EXCEEDS_CAPACITY, NEW_SLOT_RECOMMENDED
+  approvalStatus               String    @default("PENDING") // PENDING, APPROVED, REJECTED, ALLOCATED_TO_NEW_SLOT
+  reason                       String
+  approvedBy                   String?
+  approvedAt                   DateTime?
+  auditRef                     String?
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
+
+  booking                      Booking   @relation(fields: [bookingId], references: [id])
+}
+
+model ProcurementRecord {
+  id                      String   @id @default(uuid())
+  procurementId           String   @unique // e.g. "PRC-2026-8812"
+  farmerId                String
+  tokenId                 String   @unique
+  bookingId               String   @unique
+  crop                    String
+  centreId                String
+  expectedQuantity        Float
+  actualDeliveredQuantity Float
+  acceptedQuantity        Float
+  rejectedQuantity        Float    @default(0.0)
+  additionalQuantity      Float    @default(0.0)
+  finalProcuredQuantity   Float
+  applicableRate          Float    // rate per quintal
+  payableAmount           Float    // finalProcuredQuantity * applicableRate
+  procurementStatus       String   @default("CONFIRMED") // DRAFT, VERIFIED, CONFIRMED, CANCELLED
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  farmer                  Farmer            @relation(fields: [farmerId], references: [farmerId])
+  centre                  ProcurementCentre @relation(fields: [centreId], references: [id])
+  booking                 Booking           @relation(fields: [bookingId], references: [id])
+  payment                 Payment?
+}
+
+model Payment {
+  id                     String    @id @default(uuid())
+  paymentId              String    @unique // e.g. "PAY-2026-9901"
+  procurementId          String    @unique
+  farmerId               String
+  payableAmount          Float
+  status                 String    @default("INITIATED") // NOT_INITIATED, INITIATED, PROCESSING, APPROVED, PAID, FAILED, ON_HOLD
+  paymentReference       String?   // e.g. "PFMS-NEFT-2026-89410"
+  bankAccountMasked      String
+  ifscCode               String
+  expectedProcessingDate DateTime
+  completedAt            DateTime?
+  failureReason          String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  procurement            ProcurementRecord @relation(fields: [procurementId], references: [procurementId])
+  farmer                 Farmer            @relation(fields: [farmerId], references: [farmerId])
+}
+
+model Notification {
+  id                      String   @id @default(uuid())
+  recipientId             String   // farmerId or userId
+  category                String   // BOOKING, QUEUE, DELAY, QUALITY, WEIGHMENT, PAYMENT, SYSTEM
+  title                   String
+  message                 String
+  actionUrl               String?
+  isRead                  Boolean  @default(false)
+  deliveryChannelReadiness String  @default("IN_APP") // IN_APP, SMS, WHATSAPP, IVR
+  preferredLanguage       String   @default("en")
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@index([recipientId, isRead])
+}
+
+model CentreDelay {
+  id                  String    @id @default(uuid())
+  centreId            String
+  reason              String    // CONGESTION, MACHINERY_FAILURE, WEATHER, SERVER_OUTAGE, ADMINISTRATIVE_DELAY, CENTRE_CLOSURE, OTHER
+  description         String
+  delayMinutes        Int
+  affectedTokensCount Int       @default(0)
+  startTime           DateTime  @default(now())
+  expectedResolution  DateTime
+  originalValidity    DateTime?
+  newValidity         DateTime?
+  authorizedAction    String    @default("EXTEND_VALIDITY") // EXTEND_VALIDITY, RESCHEDULE, NOTIFY_ONLY
+  createdBy           String    // operator / admin username
+  createdAt           DateTime  @default(now())
+
+  centre              ProcurementCentre @relation(fields: [centreId], references: [id])
+}
+
+model CultivationCost {
+  id               String   @id @default(uuid())
+  location         String   // State or District, e.g. "Haryana"
+  season           String   // Rabi 2026
+  crop             String   // Wheat
+  category         String   // DIESEL, SEEDS, FERTILIZER, LABOUR, MACHINERY, IRRIGATION
+  baselineCost     Float
+  currentCost      Float
+  percentageChange Float
+  lastUpdated      DateTime @default(now())
+  source           String   @default("CACP & State Directorate of Agriculture")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  actor         String   // username or userId
+  actorRole     String   // role
+  action        String   // e.g. SLOT_BOOKING, TOKEN_EXTENSION, QUALITY_OVERRIDE, etc.
+  entityType    String   // e.g. Booking, Slot, QualityAssay, Weighment, Payment
+  entityId      String
+  oldValue      String?  // JSON string
+  newValue      String?  // JSON string
+  reason        String
+  correlationId String?
+  timestamp     DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actor])
+}

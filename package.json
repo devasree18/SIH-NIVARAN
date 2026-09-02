@@ -1,0 +1,13 @@
+{
+  "name": "sih-nivaran",
+  "version": "1.0.0",
+  "description": "Smart Agricultural Procurement Management Platform - SIH 2026 Problem Statement 26032",
+  "private": true,
+  "scripts": {
+    "server:dev": "npm --prefix server run dev",
+    "client:dev": "npm --prefix client run dev",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "test": "npm --prefix server run test",
+    "seed": "npm --prefix server run prisma:seed"
+  }
+}
