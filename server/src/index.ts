@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import routes from './routes';
 import { correlationMiddleware } from './middleware/auth';
 import { errorHandler } from './middleware/errorHandler';
@@ -62,6 +64,27 @@ app.get(['/health', '/api/health'], (_req, res) => {
 
 // Mount Versioned API Routes
 app.use('/api/v1', routes);
+
+// Serve frontend static assets if client/dist exists (Unified Single Service + Static Fallback)
+const candidatePaths = [
+  path.resolve(__dirname, '../../client/dist'),
+  path.resolve(process.cwd(), 'client/dist'),
+  path.resolve(process.cwd(), '../client/dist'),
+];
+const clientDist = candidatePaths.find((p) => fs.existsSync(p));
+
+if (clientDist) {
+  logger.info(`Serving frontend from: ${clientDist}`);
+  app.use(express.static(clientDist));
+
+  // SPA fallback for all non-API GET routes
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path === '/health') {
+      return next();
+    }
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // Global Error Handler
 app.use(errorHandler);
