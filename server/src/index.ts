@@ -32,16 +32,30 @@ const allowedOrigins = Array.from(new Set([...configuredOrigins, ...defaultOrigi
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, server-to-server, curl, Postman, health checks)
+      // 1. Allow requests with no origin (curl, direct browser requests, mobile apps)
       if (!origin) return callback(null, true);
+
       const normalizedOrigin = origin.replace(/\/+$/, '');
+
+      // 2. Allow configured FRONTEND_URL or local development
       if (
         allowedOrigins.includes(normalizedOrigin) ||
         process.env.NODE_ENV !== 'production'
       ) {
         return callback(null, true);
       }
-      return callback(new Error(`CORS blocked: origin ${origin} is not allowed`));
+
+      // 3. Allow all Render deployment domains (*.onrender.com)
+      if (
+        normalizedOrigin.endsWith('.onrender.com') ||
+        normalizedOrigin.includes('localhost') ||
+        normalizedOrigin.includes('127.0.0.1')
+      ) {
+        return callback(null, true);
+      }
+
+      // 4. If not allowed, omit CORS headers safely without throwing an Error (which triggers 500 on assets)
+      return callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
