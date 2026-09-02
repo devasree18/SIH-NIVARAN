@@ -59,8 +59,22 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
   // 2. Slot Capacity Over-Allocation Prevention
   it('2. Prevents booking when requested quantity exceeds available slot capacity', async () => {
     const testDate = getUniqueDate();
-    const smallSlot = await prisma.slot.create({
-      data: {
+    const smallSlot = await prisma.slot.upsert({
+      where: {
+        centreId_date_startTime: {
+          centreId,
+          date: testDate,
+          startTime: '14:00',
+        },
+      },
+      update: {
+        capacity: 20.0,
+        availableQuantity: 20.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+      create: {
         centreId,
         date: testDate,
         startTime: '14:00',
@@ -88,8 +102,22 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
   // 3. Concurrency Protection
   it('3. Protects against concurrent booking race conditions', async () => {
     const raceDate = getUniqueDate();
-    const raceSlot = await prisma.slot.create({
-      data: {
+    const raceSlot = await prisma.slot.upsert({
+      where: {
+        centreId_date_startTime: {
+          centreId,
+          date: raceDate,
+          startTime: '09:00',
+        },
+      },
+      update: {
+        capacity: 30.0,
+        availableQuantity: 30.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+      create: {
         centreId,
         date: raceDate,
         startTime: '09:00',
@@ -154,10 +182,38 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
   // 4. Duplicate Active Booking Prevention
   it('4. Prevents a farmer from creating duplicate active bookings on the same date', async () => {
     const dupDate = getUniqueDate();
+    const testFarmer = await prisma.farmer.create({
+      data: {
+        farmerId: `FARMER-DUP-${Date.now()}`,
+        fullName: 'Dup Farmer',
+        mobileNumber: `95${Math.floor(10000000 + Math.random() * 90000000)}`,
+        address: 'Test',
+        district: 'Karnal',
+        village: 'Test',
+        landDetails: '{}',
+        bankName: 'SBI',
+        accountNumberMasked: 'XXXXXXXX1111',
+        ifscCode: 'SBIN0001234',
+      },
+    });
 
     // Create isolated slot
-    await prisma.slot.create({
-      data: {
+    await prisma.slot.upsert({
+      where: {
+        centreId_date_startTime: {
+          centreId,
+          date: dupDate,
+          startTime: '10:00',
+        },
+      },
+      update: {
+        capacity: 100.0,
+        availableQuantity: 100.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+      create: {
         centreId,
         date: dupDate,
         startTime: '10:00',
@@ -172,7 +228,7 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
 
     // First booking
     await slotAllocationService.bookSlot({
-      farmerId: 'FARMER-HR-2026-101',
+      farmerId: testFarmer.farmerId,
       centreId,
       crop: 'Wheat',
       requestedQuantity: 25.0,
@@ -182,7 +238,7 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
     // Attempt second booking for same farmer on same date
     await expect(
       slotAllocationService.bookSlot({
-        farmerId: 'FARMER-HR-2026-101',
+        farmerId: testFarmer.farmerId,
         centreId,
         crop: 'Wheat',
         requestedQuantity: 20.0,
@@ -207,8 +263,37 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
   // 6. Token Protection & Delay Validity Extension
   it('6. Automatically extends active token validity when centre delay is recorded', async () => {
     const delayDate = getUniqueDate();
-    const slot = await prisma.slot.create({
+    const delayFarmer = await prisma.farmer.create({
       data: {
+        farmerId: `FARMER-DELAY-${Date.now()}`,
+        fullName: 'Delay Farmer',
+        mobileNumber: `94${Math.floor(10000000 + Math.random() * 90000000)}`,
+        address: 'Test',
+        district: 'Karnal',
+        village: 'Test',
+        landDetails: '{}',
+        bankName: 'SBI',
+        accountNumberMasked: 'XXXXXXXX1111',
+        ifscCode: 'SBIN0001234',
+      },
+    });
+
+    const slot = await prisma.slot.upsert({
+      where: {
+        centreId_date_startTime: {
+          centreId,
+          date: delayDate,
+          startTime: '11:00',
+        },
+      },
+      update: {
+        capacity: 60.0,
+        availableQuantity: 60.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+      create: {
         centreId,
         date: delayDate,
         startTime: '11:00',
@@ -223,7 +308,7 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
 
     // Create a fresh booking
     const { booking } = await slotAllocationService.bookSlot({
-      farmerId: 'FARMER-HR-2026-103',
+      farmerId: delayFarmer.farmerId,
       centreId,
       crop: 'Wheat',
       requestedQuantity: 20.0,
