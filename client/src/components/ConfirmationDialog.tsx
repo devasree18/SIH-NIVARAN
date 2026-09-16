@@ -28,7 +28,11 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
 
   return (
     <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
+      <div
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+        style={{ maxWidth: '440px' }}
+      >
         <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
           <div
             style={{
@@ -44,18 +48,30 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           >
             <AlertTriangle size={22} color={isDangerous ? 'var(--color-danger)' : 'var(--color-warning)'} />
           </div>
-          <div>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '6px' }}>{title}</h3>
-            <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)' }}>{message}</p>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '6px', wordBreak: 'break-word' }}>{title}</h3>
+            <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)', wordBreak: 'break-word' }}>{message}</p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-          <button className="btn btn-secondary" onClick={onCancel} disabled={loading}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '10px',
+            marginTop: '20px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <button
+            className="btn btn-secondary btn-mobile-full"
+            onClick={onCancel}
+            disabled={loading}
+          >
             {cancelText}
           </button>
           <button
-            className={`btn ${isDangerous ? 'btn-danger' : 'btn-primary'}`}
+            className={`btn ${isDangerous ? 'btn-danger' : 'btn-primary'} btn-mobile-full`}
             onClick={onConfirm}
             disabled={loading}
           >

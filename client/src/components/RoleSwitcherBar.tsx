@@ -1,11 +1,11 @@
 import React from 'react';
-import { UserCheck, Shield, ChevronDown } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { useAuth, UserRole } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const RoleSwitcherBar: React.FC = () => {
   const { user, switchRole, loading } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   const roles: { role: UserRole; label: string; icon: string }[] = [
     { role: 'FARMER', label: '1. Farmer (किसान)', icon: '🌾' },
@@ -26,28 +26,32 @@ export const RoleSwitcherBar: React.FC = () => {
       style={{
         backgroundColor: '#1b4332',
         color: '#ffffff',
-        padding: '8px 24px',
+        padding: '8px clamp(12px, 3vw, 20px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         fontSize: '0.82rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
         flexWrap: 'wrap',
-        gap: '12px',
+        gap: '8px',
         zIndex: 100,
+        width: '100%',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <Shield size={16} color="#74c69d" />
-        <span style={{ fontWeight: 600 }}>SIH 2026 Evaluation Toolbar:</span>
-        <span style={{ opacity: 0.85 }}>Role-Based Access Simulation</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <Shield size={16} color="#74c69d" style={{ flexShrink: 0 }} />
+        <span style={{ fontWeight: 600 }}>Evaluation Toolbar:</span>
+        <span style={{ opacity: 0.85, fontSize: '0.78rem' }}>Role Access Simulation</span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', minWidth: 0 }}>
         {/* Language Switcher */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ opacity: 0.85 }}>Language:</span>
+          <label htmlFor="eval-lang-select" style={{ opacity: 0.85, fontSize: '0.78rem' }}>
+            Lang:
+          </label>
           <select
+            id="eval-lang-select"
             value={language}
             onChange={(e) => setLanguage(e.target.value as any)}
             style={{
@@ -55,9 +59,10 @@ export const RoleSwitcherBar: React.FC = () => {
               color: '#ffffff',
               border: '1px solid #52b788',
               borderRadius: '4px',
-              padding: '4px 8px',
+              padding: '5px 8px',
               fontSize: '0.8rem',
               fontWeight: 600,
+              minHeight: '34px',
             }}
           >
             <option value="en">English</option>
@@ -68,8 +73,11 @@ export const RoleSwitcherBar: React.FC = () => {
 
         {/* Role Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ opacity: 0.85 }}>Active Role:</span>
+          <label htmlFor="eval-role-select" style={{ opacity: 0.85, fontSize: '0.78rem' }}>
+            Role:
+          </label>
           <select
+            id="eval-role-select"
             value={user?.role || 'FARMER'}
             onChange={handleRoleChange}
             disabled={loading}
@@ -78,9 +86,11 @@ export const RoleSwitcherBar: React.FC = () => {
               color: '#ffffff',
               border: '1px solid #74c69d',
               borderRadius: '4px',
-              padding: '4px 10px',
+              padding: '5px 8px',
               fontSize: '0.82rem',
               fontWeight: 700,
+              minHeight: '34px',
+              maxWidth: '210px',
             }}
           >
             {roles.map((r) => (
@@ -90,12 +100,6 @@ export const RoleSwitcherBar: React.FC = () => {
             ))}
           </select>
         </div>
-
-        {user && (
-          <div style={{ opacity: 0.9 }}>
-            Logged in as: <strong>{user.fullName}</strong>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -69,11 +69,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
   return (
     <div
       style={{
-        minHeight: '80vh',
+        minHeight: '85vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '24px',
+        padding: 'clamp(12px, 3vw, 24px)',
+        width: '100%',
       }}
     >
       <div
@@ -82,7 +83,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
           maxWidth: isRegister ? '680px' : '440px',
           width: '100%',
           borderTop: '6px solid var(--color-primary-800)',
-          padding: '32px 28px',
+          padding: 'clamp(20px, 4vw, 32px)',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -103,10 +104,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
           >
             नि
           </div>
-          <h2 style={{ fontSize: '1.4rem', color: 'var(--color-primary-900)' }}>
+          <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.45rem)', color: 'var(--color-primary-900)' }}>
             {isRegister ? 'New Farmer Portal Registration' : 'Sign in to NIVARAN'}
           </h2>
-          <p style={{ fontSize: '0.86rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
+          <p style={{ fontSize: '0.84rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
             Smart India Hackathon 2026 • Problem Statement 26032
           </p>
         </div>
@@ -121,6 +122,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
                   className="form-input"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                   required
                 />
               </div>
@@ -132,6 +134,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
                   className="form-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
               </div>
@@ -168,7 +171,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
               <div>
                 <div className="form-group">
                   <label className="form-label">District & Village</label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
                     <input
                       type="text"
                       className="form-input"
@@ -193,6 +196,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
                   <input
                     type="number"
                     step="0.5"
+                    min="0.5"
                     className="form-input"
                     value={acreage}
                     onChange={(e) => setAcreage(parseFloat(e.target.value) || 0)}
@@ -237,8 +241,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
 
           <button
             type="submit"
-            className="btn btn-primary"
-            style={{ width: '100%', padding: '12px', marginTop: '16px', fontWeight: 700 }}
+            className="btn btn-primary btn-mobile-full"
+            style={{ width: '100%', padding: '12px', marginTop: '16px', fontWeight: 700, minHeight: '44px' }}
             disabled={loading}
           >
             {loading ? 'Processing...' : isRegister ? 'Register Farmer Profile' : 'Sign In'}
@@ -250,7 +254,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => setIsRegister(!isRegister)}
-            style={{ fontSize: '0.84rem', color: 'var(--color-primary-700)', fontWeight: 600 }}
+            style={{
+              fontSize: '0.84rem',
+              color: 'var(--color-primary-700)',
+              fontWeight: 600,
+              padding: '6px 8px',
+              minHeight: '38px',
+            }}
           >
             {isRegister
               ? 'Already registered? Sign in with existing credentials'

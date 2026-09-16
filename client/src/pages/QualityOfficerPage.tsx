@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FlaskConical, CheckCircle, AlertTriangle, RefreshCw, ArrowRight } from 'lucide-react';
+import { FlaskConical, RefreshCw, ArrowRight } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { StatusBadge } from '../components/StatusBadge';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 export const QualityOfficerPage: React.FC = () => {
@@ -75,10 +74,19 @@ export const QualityOfficerPage: React.FC = () => {
 
   return (
     <div className="content-body">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h1>Quality & Assay Certification Laboratory</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <h1>Quality & Assay Certification Lab</h1>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
             Officer: <strong>{user?.fullName}</strong> • Digital Mandi Grain Testing Terminal
           </p>
         </div>
@@ -107,7 +115,7 @@ export const QualityOfficerPage: React.FC = () => {
                     key={item.tokenId}
                     onClick={() => setSelectedToken(item)}
                     style={{
-                      padding: '14px',
+                      padding: '12px 14px',
                       borderRadius: 'var(--radius-md)',
                       border: isSelected
                         ? '2px solid var(--color-primary-700)'
@@ -116,9 +124,10 @@ export const QualityOfficerPage: React.FC = () => {
                         ? 'var(--color-primary-50)'
                         : 'var(--color-bg-surface)',
                       cursor: 'pointer',
+                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '4px' }}>
                       <span style={{ fontWeight: 800, fontSize: '0.98rem' }}>
                         Token #{item.tokenId}
                       </span>
@@ -132,7 +141,7 @@ export const QualityOfficerPage: React.FC = () => {
               })}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-subtle)' }}>
+            <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
               No pending grain samples awaiting quality assay.
             </div>
           )}
@@ -145,7 +154,7 @@ export const QualityOfficerPage: React.FC = () => {
               Record Certified Assay Parameters
             </h3>
             {selectedToken && (
-              <span style={{ fontWeight: 700, color: 'var(--color-primary-800)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary-800)', fontSize: '0.88rem' }}>
                 Token #{selectedToken.tokenId}
               </span>
             )}
@@ -153,9 +162,9 @@ export const QualityOfficerPage: React.FC = () => {
 
           {selectedToken ? (
             <form onSubmit={handleSubmitAssay}>
-              <div style={{ padding: '10px', backgroundColor: 'var(--color-bg-subtle)', borderRadius: '6px', marginBottom: '16px', fontSize: '0.84rem' }}>
-                Testing <strong>{selectedToken.crop}</strong> produce for farmer <strong>{selectedToken.farmer?.fullName}</strong>.
-                National MSP tolerances: Moisture &le; 12.0%, Foreign Matter &le; 0.75%, Damaged &le; 4.0%.
+              <div style={{ padding: '10px 12px', backgroundColor: 'var(--color-bg-subtle)', borderRadius: '6px', marginBottom: '16px', fontSize: '0.84rem', wordBreak: 'break-word' }}>
+                Testing <strong>{selectedToken.crop}</strong> for <strong>{selectedToken.farmer?.fullName}</strong>.<br />
+                National MSP limits: Moisture &le; 12.0%, Foreign Matter &le; 0.75%, Damaged &le; 4.0%.
               </div>
 
               <div className="form-group">
@@ -170,7 +179,7 @@ export const QualityOfficerPage: React.FC = () => {
                   onChange={(e) => setMoisture(parseFloat(e.target.value) || 0)}
                   required
                 />
-                <div className="form-hint">Must be &le; 12.0% for certified Wheat (Grade A standard &le; 11.0%)</div>
+                <div className="form-hint">Must be &le; 12.0% for certified Wheat</div>
               </div>
 
               <div className="form-group">
@@ -185,7 +194,7 @@ export const QualityOfficerPage: React.FC = () => {
                   onChange={(e) => setForeignMatter(parseFloat(e.target.value) || 0)}
                   required
                 />
-                <div className="form-hint">Permissible maximum threshold: 0.75%</div>
+                <div className="form-hint">Permissible maximum: 0.75%</div>
               </div>
 
               <div className="form-group">
@@ -200,11 +209,11 @@ export const QualityOfficerPage: React.FC = () => {
                   onChange={(e) => setDamagedGrains(parseFloat(e.target.value) || 0)}
                   required
                 />
-                <div className="form-hint">Permissible maximum threshold: 4.0%</div>
+                <div className="form-hint">Permissible maximum: 4.0%</div>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Assay Laboratory Notes & Observations</label>
+                <label className="form-label">Assay Notes & Observations</label>
                 <textarea
                   rows={2}
                   className="form-textarea"
@@ -217,9 +226,9 @@ export const QualityOfficerPage: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-mobile-full"
                   disabled={submitting}
-                  style={{ padding: '10px 20px', fontWeight: 700 }}
+                  style={{ padding: '10px 20px', fontWeight: 700, minHeight: '44px' }}
                 >
                   {submitting ? 'Certifying Assay...' : 'Submit Certified Assay Decision'}
                   <ArrowRight size={16} />
@@ -227,7 +236,7 @@ export const QualityOfficerPage: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-subtle)' }}>
+            <div style={{ textAlign: 'center', padding: '36px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
               Select a sample from the left queue to begin quality inspection.
             </div>
           )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Shield, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { api } from '../api/client';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
@@ -30,11 +30,20 @@ export const AuditLogPage: React.FC = () => {
 
   return (
     <div className="content-body">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
           <h1>System Audit Trail & Governance Log</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
-            Cryptographically timestamped immutable administrative records for all slot, token, assay, weight, and DBT actions.
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
+            Cryptographically timestamped immutable records for all slot, token, assay, weighment, and DBT actions.
           </p>
         </div>
 

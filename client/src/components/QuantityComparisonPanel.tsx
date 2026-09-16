@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Scale } from 'lucide-react';
 
 interface QuantityComparisonPanelProps {
   bookedQuantity: number;
@@ -47,22 +47,22 @@ export const QuantityComparisonPanel: React.FC<QuantityComparisonPanelProps> = (
       <div className="grid-4">
         <div style={{ padding: '12px', background: 'var(--color-bg-subtle)', borderRadius: '6px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', fontWeight: 600 }}>
-            Booked Token Allocation
+            Booked Allocation
           </div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--color-text-main)' }}>
-            {bookedQuantity} <span style={{ fontSize: '0.85rem' }}>Qtl</span>
+          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-main)', marginTop: '2px' }}>
+            {bookedQuantity} <span style={{ fontSize: '0.82rem' }}>Qtl</span>
           </div>
         </div>
 
         <div style={{ padding: '12px', background: 'var(--color-bg-subtle)', borderRadius: '6px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', fontWeight: 600 }}>
-            Gross Weight (Vehicle + Produce)
+            Gross Weight
           </div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--color-text-main)' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-main)', marginTop: '2px' }}>
             {grossWeight !== undefined ? `${grossWeight} Qtl` : '—'}
           </div>
           {tareWeight !== undefined && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--color-text-subtle)', marginTop: '2px' }}>
               Tare: {tareWeight} Qtl
             </div>
           )}
@@ -72,11 +72,11 @@ export const QuantityComparisonPanel: React.FC<QuantityComparisonPanelProps> = (
           <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', fontWeight: 600 }}>
             Delivered Net Produce
           </div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 700, color: hasExcess ? 'var(--color-warning)' : 'var(--color-text-main)' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: hasExcess ? 'var(--color-warning)' : 'var(--color-text-main)', marginTop: '2px' }}>
             {netWeight !== undefined ? `${netWeight} Qtl` : '—'}
           </div>
           {hasExcess && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-warning)', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--color-warning)', fontWeight: 600, marginTop: '2px' }}>
               +{excessQuantity} Qtl excess
             </div>
           )}
@@ -86,7 +86,7 @@ export const QuantityComparisonPanel: React.FC<QuantityComparisonPanelProps> = (
           <div style={{ fontSize: '0.75rem', color: 'var(--color-primary-800)', fontWeight: 600 }}>
             Final Accepted Quantity
           </div>
-          <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--color-primary-900)' }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-primary-900)', marginTop: '2px' }}>
             {acceptedQuantity !== undefined ? `${acceptedQuantity} Qtl` : 'Pending'}
           </div>
         </div>

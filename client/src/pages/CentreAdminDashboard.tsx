@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Building2,
-  Users,
-  Clock,
-  AlertTriangle,
-  CheckCircle2,
   Scale,
-  DollarSign,
   ShieldAlert,
   RefreshCw,
 } from 'lucide-react';
@@ -14,10 +8,8 @@ import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { CongestionIndicator } from '../components/CongestionIndicator';
-import { CapacityIndicator } from '../components/CapacityIndicator';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { ConfirmationDialog } from '../components/ConfirmationDialog';
-import { StatusBadge } from '../components/StatusBadge';
 
 export const CentreAdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -132,22 +124,22 @@ export const CentreAdminDashboard: React.FC = () => {
           gap: '12px',
         }}
       >
-        <div>
+        <div style={{ minWidth: 0 }}>
           <h1>Mandi Operations & Queue Control</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
             Centre: <strong>{centre?.name} ({centre?.code})</strong> • Status: <strong>{centre?.operationalStatus}</strong>
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button className="btn btn-secondary" onClick={fetchAdminData}>
             <RefreshCw size={16} /> Refresh
           </button>
           <button
-            className="btn btn-danger"
+            className="btn btn-danger btn-mobile-full"
             onClick={() => setIsDelayModalOpen(true)}
           >
-            <ShieldAlert size={16} /> Announce Centre Delay (Token Protection)
+            <ShieldAlert size={16} /> Announce Delay (Token Protection)
           </button>
         </div>
       </div>
@@ -165,7 +157,7 @@ export const CentreAdminDashboard: React.FC = () => {
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Scheduled Today
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-primary-900)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-primary-900)', marginTop: '4px' }}>
             {metrics?.scheduledToday || 0}
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
@@ -177,7 +169,7 @@ export const CentreAdminDashboard: React.FC = () => {
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Waiting in Queue
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
             {metrics?.waitingCount || 0}
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
@@ -189,23 +181,23 @@ export const CentreAdminDashboard: React.FC = () => {
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Completed Procurements
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
             {metrics?.completedToday || 0}
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
-            Total Qtl Today: {metrics?.procuredQuantityToday || 0} Qtl
+            Total Today: {metrics?.procuredQuantityToday || 0} Qtl
           </div>
         </div>
 
         <div className="nivaran-card">
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
-            Daily Capacity Occupancy
+            Capacity Occupancy
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-primary-800)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-primary-800)', marginTop: '4px' }}>
             {metrics?.occupancyPercent || 0}%
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
-            {metrics?.totalReservedQuantity} / {metrics?.totalSlotCapacity} Qtl reserved
+            {metrics?.totalReservedQuantity} / {metrics?.totalSlotCapacity} Qtl
           </div>
         </div>
       </div>
@@ -217,8 +209,8 @@ export const CentreAdminDashboard: React.FC = () => {
             <Scale size={18} color="var(--color-primary-700)" />
             Pending Excess Quantity Approvals ({adjustments.length})
           </h3>
-          <span style={{ fontSize: '0.8rem', color: 'var(--color-text-subtle)' }}>
-            Manager authorization required for produce exceeding booked quota
+          <span style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>
+            Authorization required for produce exceeding booked quota
           </span>
         </div>
 
@@ -229,10 +221,10 @@ export const CentreAdminDashboard: React.FC = () => {
                 <tr>
                   <th>Token ID</th>
                   <th>Farmer</th>
-                  <th>Booked Qty</th>
-                  <th>Delivered Qty</th>
-                  <th>Excess Requested</th>
-                  <th>Reason / Cause</th>
+                  <th>Booked</th>
+                  <th>Delivered</th>
+                  <th>Excess</th>
+                  <th>Reason</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -248,10 +240,10 @@ export const CentreAdminDashboard: React.FC = () => {
                     </td>
                     <td style={{ fontSize: '0.82rem', color: 'var(--color-text-subtle)' }}>{adj.reason}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: '6px' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         <button
                           className="btn btn-success"
-                          style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                          style={{ padding: '4px 10px', fontSize: '0.78rem', minHeight: '34px' }}
                           onClick={() => {
                             setSelectedAdjustment(adj);
                             setAdjustmentAction('approve');
@@ -261,7 +253,7 @@ export const CentreAdminDashboard: React.FC = () => {
                         </button>
                         <button
                           className="btn btn-danger"
-                          style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                          style={{ padding: '4px 10px', fontSize: '0.78rem', minHeight: '34px' }}
                           onClick={() => {
                             setSelectedAdjustment(adj);
                             setAdjustmentAction('reject');
@@ -277,7 +269,7 @@ export const CentreAdminDashboard: React.FC = () => {
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-text-subtle)', fontSize: '0.86rem' }}>
+          <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--color-text-subtle)', fontSize: '0.86rem' }}>
             No excess quantity requests pending review. All certified weights match booked allocations.
           </div>
         )}
@@ -287,12 +279,12 @@ export const CentreAdminDashboard: React.FC = () => {
       {isDelayModalOpen && (
         <div className="modal-overlay" onClick={() => setIsDelayModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <ShieldAlert color="var(--color-danger)" size={22} />
-              Announce Centre Delay & Protect Farmer Tokens
+              Announce Centre Delay & Protect Tokens
             </h3>
             <p style={{ fontSize: '0.86rem', color: 'var(--color-text-muted)', marginBottom: '16px' }}>
-              When a mandi experiences machinery downtime, weather disruption, or grid congestion, recording a delay automatically extends all active farmer tokens so farmers are never penalized or expired.
+              Recording a delay automatically extends all active farmer tokens so farmers are never penalized.
             </p>
 
             <form onSubmit={handleAnnounceDelay}>
@@ -332,22 +324,30 @@ export const CentreAdminDashboard: React.FC = () => {
                   rows={3}
                   value={delayDescription}
                   onChange={(e) => setDelayDescription(e.target.value)}
-                  placeholder="e.g. Weighbridge load-cell recalibration under way. Token validities shifted forward."
+                  placeholder="e.g. Weighbridge recalibration under way. Token validities extended."
                   required
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '10px',
+                  marginTop: '20px',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-secondary btn-mobile-full"
                   onClick={() => setIsDelayModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-danger"
+                  className="btn btn-danger btn-mobile-full"
                   disabled={submittingDelay}
                 >
                   {submittingDelay ? 'Protecting Tokens...' : 'Broadcast Delay & Extend Validity'}

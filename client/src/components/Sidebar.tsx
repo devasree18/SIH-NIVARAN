@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Home,
   CalendarPlus,
@@ -34,6 +34,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useLanguage();
 
   const role = user?.role || 'FARMER';
+
+  // Handle escape key to close sidebar on mobile
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Lock background scroll when mobile sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const navItems = [
     // Farmer Items
@@ -118,32 +141,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
+          className="sidebar-backdrop mobile-only"
           onClick={onClose}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            zIndex: 95,
-          }}
+          aria-label="Close navigation sidebar"
         />
       )}
 
       <aside
-        className="app-sidebar"
-        style={{
-          width: 'var(--sidebar-width)',
-          backgroundColor: '#ffffff',
-          borderRight: '1px solid var(--color-border-subtle)',
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          zIndex: 96,
-          display: 'flex',
-          flexDirection: 'column',
-          transform: isOpen ? 'translateX(0)' : undefined,
-          transition: 'transform 0.2s ease',
-        }}
+        className={`app-sidebar ${isOpen ? 'is-open' : ''}`}
+        aria-label="Primary site navigation"
       >
         {/* Brand Header */}
         <div
@@ -152,44 +158,77 @@ export const Sidebar: React.FC<SidebarProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 20px',
+            padding: '0 16px',
             borderBottom: '1px solid var(--color-border-subtle)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div
               style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '6px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
                 backgroundColor: 'var(--color-primary-800)',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 700,
-                fontSize: '0.9rem',
+                fontSize: '0.95rem',
               }}
             >
               नि
             </div>
-            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--color-primary-900)' }}>
-              NIVARAN
-            </span>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--color-primary-900)' }}>
+                NIVARAN
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--color-text-subtle)', lineHeight: 1 }}>
+                Mandi Procurement Platform
+              </div>
+            </div>
           </div>
 
           <button
             onClick={onClose}
             className="mobile-only"
-            style={{ padding: '6px', color: 'var(--color-text-subtle)' }}
+            aria-label="Close navigation menu"
+            style={{
+              padding: '8px',
+              color: 'var(--color-text-subtle)',
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minWidth: '40px',
+              minHeight: '40px',
+            }}
           >
-            <X size={20} />
+            <X size={22} />
           </button>
         </div>
 
         {/* Navigation Items */}
-        <nav style={{ flex: 1, padding: '16px 12px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-text-subtle)', textTransform: 'uppercase', padding: '6px 12px', letterSpacing: '0.05em' }}>
+        <nav
+          style={{
+            flex: 1,
+            padding: '16px 10px',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              color: 'var(--color-text-subtle)',
+              textTransform: 'uppercase',
+              padding: '6px 12px',
+              letterSpacing: '0.05em',
+            }}
+          >
             Navigation
           </div>
 
@@ -208,9 +247,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '10px 14px',
+                  padding: '11px 14px',
+                  minHeight: '44px',
                   borderRadius: 'var(--radius-md)',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: isActive ? 700 : 500,
                   color: isActive ? 'var(--color-primary-800)' : 'var(--color-text-main)',
                   backgroundColor: isActive ? 'var(--color-primary-100)' : 'transparent',
@@ -220,10 +260,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }}
               >
                 <Icon
-                  size={18}
+                  size={19}
                   color={isActive ? 'var(--color-primary-800)' : 'var(--color-primary-600)'}
                 />
-                <span style={{ flex: 1 }}>{item.label}</span>
+                <span style={{ flex: 1, wordBreak: 'break-word' }}>{item.label}</span>
               </button>
             );
           })}
@@ -232,10 +272,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Footer Government Service Stamp */}
         <div
           style={{
-            padding: '16px',
+            padding: '14px 16px',
             borderTop: '1px solid var(--color-border-subtle)',
             backgroundColor: 'var(--color-bg-subtle)',
-            fontSize: '0.74rem',
+            fontSize: '0.72rem',
             color: 'var(--color-text-subtle)',
             lineHeight: 1.4,
           }}

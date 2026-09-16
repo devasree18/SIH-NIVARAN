@@ -27,13 +27,15 @@ export const CapacityIndicator: React.FC<CapacityIndicatorProps> = ({
           fontSize: '0.8rem',
           fontWeight: 600,
           marginBottom: '6px',
+          flexWrap: 'wrap',
+          gap: '4px',
         }}
       >
         <span>
           Available: <strong style={{ color: barColor }}>{available} {unit}</strong>
         </span>
-        <span style={{ color: 'var(--color-text-subtle)' }}>
-          {percentage}% Reserved ({reservedQuantity}/{totalCapacity} {unit})
+        <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.76rem' }}>
+          {percentage}% ({reservedQuantity}/{totalCapacity} {unit})
         </span>
       </div>
 

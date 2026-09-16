@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface CongestionIndicatorProps {
@@ -48,21 +48,30 @@ export const CongestionIndicator: React.FC<CongestionIndicatorProps> = ({
   return (
     <div
       style={{
-        padding: '14px 16px',
+        padding: '12px 16px',
         borderRadius: 'var(--radius-md)',
         backgroundColor: bgColor,
         border: `1px solid ${color}`,
         display: 'flex',
         flexDirection: 'column',
         gap: '6px',
+        width: '100%',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '6px',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {isCritical || isHigh ? (
-            <ShieldAlert size={20} color={color} />
+            <ShieldAlert size={20} color={color} style={{ flexShrink: 0 }} />
           ) : (
-            <ShieldCheck size={20} color={color} />
+            <ShieldCheck size={20} color={color} style={{ flexShrink: 0 }} />
           )}
           <span style={{ fontWeight: 700, fontSize: '0.92rem', color }}>
             Mandi Congestion: {level}
@@ -73,7 +82,7 @@ export const CongestionIndicator: React.FC<CongestionIndicatorProps> = ({
         </div>
       </div>
 
-      <div style={{ fontSize: '0.84rem', color: 'var(--color-text-main)' }}>
+      <div style={{ fontSize: '0.84rem', color: 'var(--color-text-main)', wordBreak: 'break-word' }}>
         {label}
       </div>
 
@@ -85,8 +94,9 @@ export const CongestionIndicator: React.FC<CongestionIndicatorProps> = ({
             color: 'var(--color-primary-900)',
             marginTop: '4px',
             padding: '6px 10px',
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'rgba(255, 255, 255, 0.75)',
             borderRadius: '4px',
+            wordBreak: 'break-word',
           }}
         >
           {t.delayProtectionNotice}
@@ -94,7 +104,7 @@ export const CongestionIndicator: React.FC<CongestionIndicatorProps> = ({
       )}
 
       {showDetails && congestion.contributingFactors && congestion.contributingFactors.length > 0 && (
-        <div style={{ marginTop: '6px', fontSize: '0.76rem', color: 'var(--color-text-muted)' }}>
+        <div style={{ marginTop: '4px', fontSize: '0.76rem', color: 'var(--color-text-muted)', wordBreak: 'break-word' }}>
           <span style={{ fontWeight: 600 }}>Active Factors: </span>
           {congestion.contributingFactors.join(' • ')}
         </div>

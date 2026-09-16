@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Building, Sprout, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Building, Clock, ArrowRight } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
@@ -91,7 +91,7 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
         idempotencyKey: `idem-${user?.farmerId || 'F'}-${selectedDate}-${Date.now()}`,
       };
 
-      const res = await api.bookSlot(payload);
+      await api.bookSlot(payload);
       showToast(t.slotBookedSuccess, 'success');
       onNavigate('farmer-dashboard');
     } catch (err: any) {
@@ -113,10 +113,10 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
   const selectedCropConfig = crops.find((c) => c.cropName === selectedCrop);
 
   return (
-    <div className="content-body" style={{ maxWidth: '960px' }}>
+    <div className="content-body" style={{ maxWidth: '980px' }}>
       <div style={{ marginBottom: '20px' }}>
         <h1>{t.bookSlot}</h1>
-        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
           Direct government slot reservation with intelligent congestion avoidance and anti-collision protection.
         </p>
       </div>
@@ -214,7 +214,7 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
                 <div style={{ fontSize: '0.84rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div><strong>Address:</strong> {selectedCentre.address}</div>
                   <div><strong>Daily Capacity:</strong> {selectedCentre.dailyCapacity} Quintals</div>
-                  <div><strong>Active Weighbridge:</strong> {selectedCentre.weighbridgeAvailability ? 'Operational' : 'Non-Operational'}</div>
+                  <div><strong>Weighbridge:</strong> {selectedCentre.weighbridgeAvailability ? 'Operational' : 'Non-Operational'}</div>
                   <div><strong>Active Counters:</strong> {selectedCentre.activeCounters} inspection lines</div>
                   <div><strong>Average Service Time:</strong> ~{selectedCentre.averageServiceMinutes} minutes / farmer</div>
                 </div>
@@ -230,8 +230,8 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
               <Clock size={18} color="var(--color-primary-700)" />
               Choose Appointment Slot on {selectedDate}
             </h3>
-            <span style={{ fontSize: '0.8rem', color: 'var(--color-text-subtle)' }}>
-              Or leave unselected for Smart Best-Time Allocation
+            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>
+              Or leave unselected for Smart Dynamic Allocation
             </span>
           </div>
 
@@ -248,7 +248,7 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
                     key={slot.id}
                     onClick={() => hasCapacity && setSelectedSlotId(isSelected ? '' : slot.id)}
                     style={{
-                      padding: '14px',
+                      padding: '12px 14px',
                       borderRadius: 'var(--radius-md)',
                       border: isSelected
                         ? '2px solid var(--color-primary-700)'
@@ -260,11 +260,14 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
                         : 'var(--color-bg-subtle)',
                       cursor: hasCapacity ? 'pointer' : 'not-allowed',
                       opacity: hasCapacity ? 1 : 0.6,
-                      transition: 'border-color 0.15s ease',
+                      transition: 'all 0.15s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
+                      <span style={{ fontWeight: 700, fontSize: '0.92rem' }}>
                         {slot.startTime} - {slot.endTime}
                       </span>
                       <span
@@ -283,8 +286,8 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
               })}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-text-subtle)' }}>
-              No slots configured yet for this date. Smart allocation will dynamically assign upon confirmation.
+            <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--color-text-subtle)', fontSize: '0.86rem' }}>
+              No specific slots configured. Dynamic allocation will assign an optimal time window on confirmation.
             </div>
           )}
 
@@ -292,11 +295,11 @@ export const BookSlotPage: React.FC<BookSlotPageProps> = ({ onNavigate }) => {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '24px' }}>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary btn-mobile-full"
               disabled={submitting}
-              style={{ padding: '12px 24px', fontSize: '1rem', fontWeight: 700 }}
+              style={{ padding: '12px 24px', fontSize: '0.98rem', fontWeight: 700, minHeight: '44px' }}
             >
-              {submitting ? 'Reserving Capacity Safely...' : 'Confirm Guaranteed Slot & Generate Token'}
+              {submitting ? 'Reserving Capacity...' : 'Confirm Guaranteed Slot & Generate Token'}
               <ArrowRight size={18} />
             </button>
           </div>

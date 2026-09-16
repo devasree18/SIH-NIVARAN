@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, RefreshCw, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { PlusCircle, RefreshCw, FileText } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
 import { QueuePositionCard } from '../components/QueuePositionCard';
 import { ProcurementTimeline } from '../components/ProcurementTimeline';
-import { CongestionIndicator } from '../components/CongestionIndicator';
 import { EmptyState } from '../components/EmptyState';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { DigitalReceiptModal } from '../components/DigitalReceiptModal';
@@ -88,16 +87,16 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ onNavigate }) 
           gap: '12px',
         }}
       >
-        <div>
+        <div style={{ minWidth: 0 }}>
           <h1 style={{ color: 'var(--color-primary-900)' }}>
             Welcome, {user?.farmer?.fullName || user?.fullName}
           </h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.86rem', marginTop: '2px' }}>
             Farmer ID: <strong>{user?.farmerId || 'FARMER-IND-2026'}</strong> • District: <strong>{user?.farmer?.district || 'Karnal'}</strong>
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button className="btn btn-secondary" onClick={fetchDashboard} title="Refresh Data">
             <RefreshCw size={16} /> Refresh
           </button>
@@ -147,7 +146,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ onNavigate }) 
                 <tr>
                   <th>Procurement ID</th>
                   <th>Crop</th>
-                  <th>Procurement Centre</th>
+                  <th>Centre</th>
                   <th>Accepted Qty</th>
                   <th>Rate / Qtl</th>
                   <th>Payable Amount</th>
@@ -172,7 +171,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ onNavigate }) 
                     <td>
                       <button
                         className="btn btn-outline"
-                        style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                        style={{ padding: '4px 10px', fontSize: '0.78rem', minHeight: '34px' }}
                         onClick={() => handleViewReceipt(record.tokenId)}
                       >
                         {t.viewReceipt}
@@ -184,7 +183,7 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ onNavigate }) 
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+          <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
             No past procurement records found.
           </div>
         )}

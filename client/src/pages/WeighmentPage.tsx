@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Scale, CheckCircle2, AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
+import { Scale, ArrowRight, RefreshCw } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { StatusBadge } from '../components/StatusBadge';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 export const WeighmentPage: React.FC = () => {
@@ -82,10 +81,19 @@ export const WeighmentPage: React.FC = () => {
 
   return (
     <div className="content-body">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h1>Weighbridge & Electronic Scale Terminal</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <h1>Weighbridge & Scale Terminal</h1>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
             Weighbridge Incharge: <strong>{user?.fullName}</strong> • Certified Double-Entry Weighment Desk
           </p>
         </div>
@@ -114,7 +122,7 @@ export const WeighmentPage: React.FC = () => {
                     key={item.tokenId}
                     onClick={() => setSelectedBooking(item)}
                     style={{
-                      padding: '14px',
+                      padding: '12px 14px',
                       borderRadius: 'var(--radius-md)',
                       border: isSelected
                         ? '2px solid var(--color-primary-700)'
@@ -123,9 +131,10 @@ export const WeighmentPage: React.FC = () => {
                         ? 'var(--color-primary-50)'
                         : 'var(--color-bg-surface)',
                       cursor: 'pointer',
+                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '4px' }}>
                       <span style={{ fontWeight: 800, fontSize: '0.98rem' }}>
                         Token #{item.tokenId}
                       </span>
@@ -139,7 +148,7 @@ export const WeighmentPage: React.FC = () => {
               })}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-subtle)' }}>
+            <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
               No vehicles currently queued for weighment. Only lots passing Quality Assay appear here.
             </div>
           )}
@@ -150,7 +159,7 @@ export const WeighmentPage: React.FC = () => {
           <div className="card-header">
             <h3 className="card-title">Enter Certified Scale Weights</h3>
             {selectedBooking && (
-              <span style={{ fontWeight: 700, color: 'var(--color-primary-800)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary-800)', fontSize: '0.88rem' }}>
                 Token #{selectedBooking.tokenId}
               </span>
             )}
@@ -158,12 +167,12 @@ export const WeighmentPage: React.FC = () => {
 
           {selectedBooking ? (
             <form onSubmit={handleSubmitWeighment}>
-              <div style={{ padding: '10px', backgroundColor: 'var(--color-bg-subtle)', borderRadius: '6px', marginBottom: '16px', fontSize: '0.84rem' }}>
-                Farmer: <strong>{selectedBooking.farmer?.fullName}</strong> • Booked Allocation: <strong>{selectedBooking.allocatedQuantity} Qtl</strong> ({selectedBooking.crop})
+              <div style={{ padding: '10px 12px', backgroundColor: 'var(--color-bg-subtle)', borderRadius: '6px', marginBottom: '16px', fontSize: '0.84rem', wordBreak: 'break-word' }}>
+                Farmer: <strong>{selectedBooking.farmer?.fullName}</strong> • Booked: <strong>{selectedBooking.allocatedQuantity} Qtl</strong> ({selectedBooking.crop})
               </div>
 
               <div className="form-group">
-                <label className="form-label">Gross Vehicle Weight (Tractor/Truck + Produce) [Qtl]</label>
+                <label className="form-label">Gross Vehicle Weight (Produce + Vehicle) [Qtl]</label>
                 <input
                   type="number"
                   step="0.01"
@@ -176,7 +185,7 @@ export const WeighmentPage: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Tare Vehicle Weight (Empty Vehicle Tare) [Qtl]</label>
+                <label className="form-label">Tare Vehicle Weight (Empty Vehicle) [Qtl]</label>
                 <input
                   type="number"
                   step="0.01"
@@ -191,23 +200,23 @@ export const WeighmentPage: React.FC = () => {
               {/* Real-time Calculation Panel */}
               <div
                 style={{
-                  padding: '14px',
+                  padding: '12px 14px',
                   borderRadius: 'var(--radius-md)',
                   backgroundColor: excess > 0 ? '#fff7ed' : 'var(--color-primary-50)',
                   border: excess > 0 ? '1px solid #fdba74' : '1px solid var(--color-primary-200)',
                   marginBottom: '20px',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Calculated Net Produce:</span>
-                  <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--color-primary-900)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>Calculated Net Produce:</span>
+                  <span style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.45rem)', fontWeight: 800, color: 'var(--color-primary-900)' }}>
                     {netWeight} Quintals
                   </span>
                 </div>
 
                 {excess > 0 && (
-                  <div style={{ marginTop: '8px', fontSize: '0.82rem', color: 'var(--color-warning)', fontWeight: 600 }}>
-                    Notice: Delivered net produce exceeds booked quota by {excess} Qtl. This will automatically generate a Quantity Adjustment Request for Centre Manager authorization.
+                  <div style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--color-warning)', fontWeight: 600, wordBreak: 'break-word' }}>
+                    Notice: Delivered produce exceeds booked quota by {excess} Qtl. This will automatically generate a Quantity Adjustment Request for Centre Manager authorization.
                   </div>
                 )}
               </div>
@@ -215,9 +224,9 @@ export const WeighmentPage: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-mobile-full"
                   disabled={submitting}
-                  style={{ padding: '10px 24px', fontWeight: 700 }}
+                  style={{ padding: '10px 24px', fontWeight: 700, minHeight: '44px' }}
                 >
                   {submitting ? 'Certifying Weights...' : 'Certify Net Weight & Confirm Procurement'}
                   <ArrowRight size={16} />
@@ -225,7 +234,7 @@ export const WeighmentPage: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--color-text-subtle)' }}>
+            <div style={{ textAlign: 'center', padding: '36px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
               Select an approved vehicle from the queue to enter scale measurements.
             </div>
           )}

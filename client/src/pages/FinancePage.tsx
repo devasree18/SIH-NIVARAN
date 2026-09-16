@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, CheckCircle2, Clock, AlertTriangle, ShieldCheck, RefreshCw } from 'lucide-react';
+import { DollarSign, RefreshCw } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
@@ -71,10 +71,19 @@ export const FinancePage: React.FC = () => {
 
   return (
     <div className="content-body">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <div>
-          <h1>PFMS Direct Benefit Transfer (DBT) Finance Portal</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <h1>PFMS DBT Finance Portal</h1>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
             Officer: <strong>{user?.fullName}</strong> • Treasury Clearing & Remittance Desk
           </p>
         </div>
@@ -88,9 +97,9 @@ export const FinancePage: React.FC = () => {
       <div className="grid-3" style={{ marginBottom: '24px' }}>
         <div className="nivaran-card" style={{ borderLeft: '4px solid var(--color-primary-700)' }}>
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
-            Total Procurement Value (INR)
+            Total Procurement Value
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-primary-900)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-primary-900)', marginTop: '4px' }}>
             ₹{(summary?.totalDisbursementValue || 0).toLocaleString('en-IN')}
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
@@ -100,9 +109,9 @@ export const FinancePage: React.FC = () => {
 
         <div className="nivaran-card" style={{ borderLeft: '4px solid var(--color-success)' }}>
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
-            Settled via Direct Benefit Transfer
+            Settled via DBT
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
             ₹{(summary?.settledValue || 0).toLocaleString('en-IN')}
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
@@ -114,7 +123,7 @@ export const FinancePage: React.FC = () => {
           <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Pending Disbursement Pipeline
           </div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.7rem)', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
             {summary?.pendingDisbursementCount || 0} vouchers
           </div>
           <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
@@ -126,7 +135,7 @@ export const FinancePage: React.FC = () => {
       {/* Payment Vouchers Table */}
       <div className="nivaran-card">
         <div className="card-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
             <h3 className="card-title">
               <DollarSign size={18} color="var(--color-primary-700)" />
               DBT Disbursement Queue
@@ -135,10 +144,11 @@ export const FinancePage: React.FC = () => {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               style={{
-                padding: '4px 8px',
+                padding: '6px 10px',
                 borderRadius: '6px',
                 border: '1px solid var(--color-border-medium)',
-                fontSize: '0.82rem',
+                fontSize: '0.84rem',
+                minHeight: '36px',
               }}
             >
               <option value="">All Statuses</option>
@@ -158,7 +168,7 @@ export const FinancePage: React.FC = () => {
                 <tr>
                   <th>Payment ID</th>
                   <th>Farmer Details</th>
-                  <th>Masked Account</th>
+                  <th>Bank Account</th>
                   <th>Payable Amount</th>
                   <th>Aging (Hours)</th>
                   <th>Status</th>
@@ -176,7 +186,7 @@ export const FinancePage: React.FC = () => {
                         <div style={{ fontWeight: 600 }}>{p.farmer?.fullName}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>{p.farmer?.farmerId}</div>
                       </td>
-                      <td style={{ fontFamily: 'monospace' }}>
+                      <td style={{ fontFamily: 'monospace', fontSize: '0.82rem' }}>
                         {p.farmer?.bankName} ({p.farmer?.accountNumberMasked})
                       </td>
                       <td style={{ fontWeight: 700, color: 'var(--color-primary-900)' }}>
@@ -201,7 +211,7 @@ export const FinancePage: React.FC = () => {
                       <td>
                         <button
                           className="btn btn-outline"
-                          style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                          style={{ padding: '4px 10px', fontSize: '0.78rem', minHeight: '34px' }}
                           onClick={() => {
                             setSelectedPayment(p);
                             setNewStatus(p.status === 'INITIATED' ? 'APPROVED' : 'PAID');
@@ -218,7 +228,7 @@ export const FinancePage: React.FC = () => {
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-subtle)' }}>
+          <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
             No disbursement vouchers found for the selected filter.
           </div>
         )}
@@ -228,11 +238,11 @@ export const FinancePage: React.FC = () => {
       {selectedPayment && (
         <div className="modal-overlay" onClick={() => setSelectedPayment(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginBottom: '14px' }}>
+            <h3 style={{ marginBottom: '14px', wordBreak: 'break-word' }}>
               Update DBT Remittance Status: #{selectedPayment.paymentId}
             </h3>
 
-            <div style={{ backgroundColor: 'var(--color-bg-subtle)', padding: '12px', borderRadius: '6px', fontSize: '0.84rem', marginBottom: '16px' }}>
+            <div style={{ backgroundColor: 'var(--color-bg-subtle)', padding: '12px', borderRadius: '6px', fontSize: '0.84rem', marginBottom: '16px', wordBreak: 'break-word' }}>
               Farmer: <strong>{selectedPayment.farmer?.fullName}</strong><br />
               Payable: <strong>₹{selectedPayment.payableAmount.toLocaleString('en-IN')}</strong><br />
               Bank Account: <strong>{selectedPayment.farmer?.bankName} ({selectedPayment.farmer?.accountNumberMasked})</strong>
@@ -250,7 +260,7 @@ export const FinancePage: React.FC = () => {
                   <option value="PROCESSING">PROCESSING (Under Treasury Batch)</option>
                   <option value="APPROVED">APPROVED (Authorized for Clearing)</option>
                   <option value="PAID">PAID (Credited via Direct Benefit Transfer)</option>
-                  <option value="ON_HOLD">ON_HOLD (Awaiting IFSC/Account Verification)</option>
+                  <option value="ON_HOLD">ON_HOLD (Awaiting Verification)</option>
                 </select>
               </div>
 
@@ -266,17 +276,25 @@ export const FinancePage: React.FC = () => {
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '10px',
+                  marginTop: '20px',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-secondary btn-mobile-full"
                   onClick={() => setSelectedPayment(null)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-mobile-full"
                   disabled={updating}
                 >
                   {updating ? 'Recording...' : 'Confirm Remittance Update'}

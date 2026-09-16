@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ListOrdered, Bell, Play, Pause, UserCheck, ArrowRight, RefreshCw } from 'lucide-react';
+import { ListOrdered, Bell, UserCheck, RefreshCw } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { StatusBadge } from '../components/StatusBadge';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 export const QueueOperatorPage: React.FC = () => {
@@ -19,8 +18,7 @@ export const QueueOperatorPage: React.FC = () => {
 
   const fetchQueueBoard = async () => {
     try {
-      const centreId = user?.centreId || 'KNL-MANDI-01'; // default fallback
-      // Find actual centre if centreId is a code or uuid
+      const centreId = user?.centreId || 'KNL-MANDI-01';
       const centres = await api.getCentres();
       const target = centres.find((c) => c.id === centreId || c.centreCode === centreId) || centres[0];
 
@@ -37,7 +35,7 @@ export const QueueOperatorPage: React.FC = () => {
 
   useEffect(() => {
     fetchQueueBoard();
-    const interval = setInterval(fetchQueueBoard, 8000); // 8s polling for fast queue responsiveness
+    const interval = setInterval(fetchQueueBoard, 8000);
     return () => clearInterval(interval);
   }, [user]);
 
@@ -98,14 +96,14 @@ export const QueueOperatorPage: React.FC = () => {
           gap: '12px',
         }}
       >
-        <div>
+        <div style={{ minWidth: 0 }}>
           <h1>Queue Counter Operator Desk</h1>
-          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
+          <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
             Mandi: <strong>{board?.centre?.name}</strong> • Active Line Management
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button className="btn btn-secondary" onClick={fetchQueueBoard}>
             <RefreshCw size={16} /> Refresh
           </button>
@@ -113,21 +111,38 @@ export const QueueOperatorPage: React.FC = () => {
       </div>
 
       {/* Operator Action Bar */}
-      <div className="nivaran-card" style={{ marginBottom: '24px', backgroundColor: '#f0fdf4', border: '1px solid #86efac' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-primary-900)' }}>
-              Operator Counter Station:
+      <div
+        className="nivaran-card"
+        style={{
+          marginBottom: '24px',
+          backgroundColor: '#f0fdf4',
+          border: '1px solid #86efac',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <span style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--color-primary-900)' }}>
+              Operator Station:
             </span>
             <select
               value={counterNum}
               onChange={(e) => setCounterNum(parseInt(e.target.value, 10))}
               style={{
-                padding: '6px 12px',
+                padding: '8px 12px',
                 borderRadius: '6px',
                 border: '1px solid #52b788',
                 fontWeight: 700,
                 fontSize: '0.9rem',
+                minHeight: '40px',
+                backgroundColor: '#ffffff',
               }}
             >
               <option value={1}>Counter #1 (Verification Desk)</option>
@@ -137,10 +152,10 @@ export const QueueOperatorPage: React.FC = () => {
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '12px', width: 'auto' }} className="btn-mobile-full">
             <button
-              className="btn btn-success"
-              style={{ padding: '10px 24px', fontSize: '1rem', fontWeight: 800 }}
+              className="btn btn-success btn-mobile-full"
+              style={{ padding: '10px 20px', fontSize: '0.95rem', fontWeight: 800, minHeight: '44px' }}
               onClick={handleCallNext}
               disabled={callingNext}
             >
@@ -173,13 +188,15 @@ export const QueueOperatorPage: React.FC = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '8px',
                     }}
                   >
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--color-primary-900)' }}>
+                      <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--color-primary-900)' }}>
                         Token #{item.tokenId} (Queue #{item.queueNumber})
                       </div>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)' }}>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
                         Farmer: <strong>{item.farmerName}</strong> • {item.crop} ({item.quantity} Qtl)
                       </div>
                     </div>
@@ -193,7 +210,7 @@ export const QueueOperatorPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div style={{ textAlign: 'center', padding: '24px', color: 'var(--color-text-subtle)' }}>
+              <div style={{ textAlign: 'center', padding: '24px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
                 No tokens currently active at inspection counters. Click "Call Next Farmer" above.
               </div>
             )}
@@ -208,20 +225,24 @@ export const QueueOperatorPage: React.FC = () => {
               </h3>
             </div>
 
-            <form onSubmit={handleManualCheckIn} style={{ display: 'flex', gap: '10px' }}>
+            <form
+              onSubmit={handleManualCheckIn}
+              style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}
+            >
               <input
                 type="text"
                 className="form-input"
-                placeholder="Enter Token ID (e.g. TKN-KNL-01-002) or Farmer ID"
+                placeholder="Enter Token ID or Farmer ID"
                 value={manualCheckInId}
                 onChange={(e) => setManualCheckInId(e.target.value)}
                 required
+                style={{ flex: '1 1 200px' }}
               />
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-primary btn-mobile-full"
                 disabled={checkingIn}
-                style={{ flexShrink: 0 }}
+                style={{ minHeight: '44px' }}
               >
                 {checkingIn ? 'Checking in...' : 'Mark Arrived'}
               </button>
@@ -236,8 +257,8 @@ export const QueueOperatorPage: React.FC = () => {
               <ListOrdered size={18} color="var(--color-primary-700)" />
               Next in Line (Waiting: {board?.waitingCount || 0})
             </h3>
-            <span style={{ fontSize: '0.8rem', color: 'var(--color-text-subtle)' }}>
-              Ordered by arrival sequence
+            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>
+              Arrival sequence
             </span>
           </div>
 
@@ -271,7 +292,7 @@ export const QueueOperatorPage: React.FC = () => {
               </table>
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-subtle)' }}>
+            <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
               Queue is clear. No farmers waiting in line.
             </div>
           )}

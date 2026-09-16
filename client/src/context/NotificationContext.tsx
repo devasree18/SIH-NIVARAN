@@ -92,34 +92,38 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       }}
     >
       {children}
-      {/* Toast Notification Container */}
+      {/* Toast Notification Container with Safe-Area Inset & Zero Overflow */}
       <div
         style={{
           position: 'fixed',
-          bottom: 24,
-          right: 24,
+          bottom: 'max(16px, env(safe-area-inset-bottom, 16px))',
+          right: 'max(16px, env(safe-area-inset-right, 16px))',
+          left: 'max(16px, env(safe-area-inset-left, 16px))',
           zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
-          gap: 10,
+          gap: '8px',
           pointerEvents: 'none',
-          maxWidth: 380,
-          width: '100%',
+          maxWidth: '400px',
+          marginLeft: 'auto',
+          width: 'calc(100% - 32px)',
         }}
       >
         {toasts.map((toast) => (
           <div
             key={toast.id}
+            role="alert"
             style={{
               pointerEvents: 'auto',
               padding: '12px 16px',
               borderRadius: '8px',
               color: '#ffffff',
-              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.15)',
               fontSize: '0.88rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              gap: '10px',
               backgroundColor:
                 toast.type === 'success'
                   ? '#166534'
@@ -131,10 +135,22 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
               animation: 'slideIn 0.2s ease-out',
             }}
           >
-            <span>{toast.message}</span>
+            <span style={{ wordBreak: 'break-word', flex: 1 }}>{toast.message}</span>
             <button
               onClick={() => removeToast(toast.id)}
-              style={{ color: '#fff', marginLeft: 12, opacity: 0.8 }}
+              aria-label="Dismiss notification"
+              style={{
+                color: '#fff',
+                opacity: 0.85,
+                padding: '4px 6px',
+                minWidth: '28px',
+                minHeight: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px',
+                flexShrink: 0,
+              }}
             >
               ✕
             </button>

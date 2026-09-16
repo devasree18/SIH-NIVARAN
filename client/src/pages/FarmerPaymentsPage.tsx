@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CreditCard, CheckCircle2, Clock, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
@@ -50,7 +50,7 @@ export const FarmerPaymentsPage: React.FC = () => {
     <div className="content-body">
       <div style={{ marginBottom: '20px' }}>
         <h1>{t.myPayments}</h1>
-        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
           Real-time Direct Benefit Transfer (DBT) remittance tracking via Public Financial Management System (PFMS).
         </p>
       </div>
@@ -58,37 +58,37 @@ export const FarmerPaymentsPage: React.FC = () => {
       {/* Summary Stat Cards */}
       <div className="grid-3" style={{ marginBottom: '24px' }}>
         <div className="nivaran-card" style={{ borderLeft: '4px solid var(--color-success)' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Settled DBT Remittances
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 3vw, 1.6rem)', fontWeight: 800, color: 'var(--color-success)', marginTop: '4px' }}>
             ₹{totalDisbursed.toLocaleString('en-IN')}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
+          <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
             Directly credited to verified bank account
           </div>
         </div>
 
         <div className="nivaran-card" style={{ borderLeft: '4px solid var(--color-warning)' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Pending Treasury Clearing
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1.3rem, 3vw, 1.6rem)', fontWeight: 800, color: 'var(--color-warning)', marginTop: '4px' }}>
             ₹{pendingDisbursement.toLocaleString('en-IN')}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
+          <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', marginTop: '4px' }}>
             Scheduled within 48 hours of procurement
           </div>
         </div>
 
         <div className="nivaran-card" style={{ borderLeft: '4px solid var(--color-primary-700)' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-subtle)' }}>
             Registered Bank Profile
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-primary-900)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', fontWeight: 700, color: 'var(--color-primary-900)', marginTop: '4px' }}>
             {user?.farmer?.bankName || 'State Bank of India'}
           </div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+          <div style={{ fontSize: '0.76rem', color: 'var(--color-text-muted)', marginTop: '2px', wordBreak: 'break-word' }}>
             A/C: {user?.farmer?.accountNumberMasked || 'XXXXXXXX4821'} • IFSC: {user?.farmer?.ifscCode || 'SBIN0001234'}
           </div>
         </div>
@@ -126,7 +126,7 @@ export const FarmerPaymentsPage: React.FC = () => {
                     <td style={{ fontWeight: 700, color: 'var(--color-primary-900)' }}>
                       ₹{p.payableAmount.toLocaleString('en-IN')}
                     </td>
-                    <td style={{ fontFamily: 'monospace', fontSize: '0.84rem' }}>
+                    <td style={{ fontFamily: 'monospace', fontSize: '0.82rem' }}>
                       {p.paymentReference || 'Pending Assignment'}
                     </td>
                     <td>{new Date(p.expectedProcessingDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</td>
@@ -139,7 +139,7 @@ export const FarmerPaymentsPage: React.FC = () => {
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-subtle)' }}>
+          <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-subtle)', fontSize: '0.88rem' }}>
             No payment records found. Payments are automatically initiated upon completed weighment and procurement confirmation.
           </div>
         )}

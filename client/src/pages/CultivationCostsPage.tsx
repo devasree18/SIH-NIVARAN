@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, ArrowUpRight, ArrowDownRight, RefreshCw, Info } from 'lucide-react';
+import { TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { api } from '../api/client';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
@@ -35,19 +35,26 @@ export const CultivationCostsPage: React.FC = () => {
   return (
     <div className="content-body">
       <div style={{ marginBottom: '20px' }}>
-        <h1>Farm Input Cultivation Costs vs Minimum Support Price (MSP)</h1>
-        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.9rem' }}>
+        <h1>Farm Input Cultivation Costs vs MSP</h1>
+        <p style={{ color: 'var(--color-text-subtle)', fontSize: '0.88rem', marginTop: '2px' }}>
           Official economic baseline monitoring by Commission for Agricultural Costs & Prices (CACP) & State Directorate of Agriculture.
         </p>
       </div>
 
       {/* Official MSP Rates Card */}
-      <div className="nivaran-card" style={{ marginBottom: '24px', backgroundColor: '#f0fdf4', border: '1px solid #86efac' }}>
+      <div
+        className="nivaran-card"
+        style={{
+          marginBottom: '24px',
+          backgroundColor: '#f0fdf4',
+          border: '1px solid #86efac',
+        }}
+      >
         <div className="card-header">
           <h3 className="card-title" style={{ color: 'var(--color-primary-900)' }}>
             Official MSP Procurement Rates (Rabi / Kharif 2025-26)
           </h3>
-          <span style={{ fontSize: '0.8rem', color: 'var(--color-primary-800)', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.78rem', color: 'var(--color-primary-800)', fontWeight: 600 }}>
             Guaranteed Direct Benefit Transfer (DBT) Base
           </span>
         </div>
@@ -58,7 +65,7 @@ export const CultivationCostsPage: React.FC = () => {
               key={c.id}
               style={{
                 backgroundColor: '#ffffff',
-                padding: '14px',
+                padding: '12px 14px',
                 borderRadius: '8px',
                 border: '1px solid #bbf7d0',
               }}
@@ -66,11 +73,11 @@ export const CultivationCostsPage: React.FC = () => {
               <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>
                 {c.cropName} ({c.season})
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary-800)', marginTop: '4px' }}>
+              <div style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)', fontWeight: 800, color: 'var(--color-primary-800)', marginTop: '4px' }}>
                 ₹{c.procurementRatePerUnit}
               </div>
-              <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>
-                Per {c.quantityUnit} (A2+FL + 50% Profit Margin)
+              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-subtle)', marginTop: '2px' }}>
+                Per {c.quantityUnit} (A2+FL + 50% Margin)
               </div>
             </div>
           ))}
@@ -92,10 +99,10 @@ export const CultivationCostsPage: React.FC = () => {
               <tr>
                 <th>Input Category</th>
                 <th>Crop & Season</th>
-                <th>Baseline Cost (₹/Acre)</th>
-                <th>Current Cost (₹/Acre)</th>
+                <th>Baseline (₹/Acre)</th>
+                <th>Current (₹/Acre)</th>
                 <th>Price Movement</th>
-                <th>Data Source</th>
+                <th>Source</th>
                 <th>Last Updated</th>
               </tr>
             </thead>

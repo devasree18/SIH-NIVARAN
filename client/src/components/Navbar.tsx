@@ -15,34 +15,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenNotificat
   const { t } = useLanguage();
 
   return (
-    <header
-      style={{
-        height: 'var(--header-height)',
-        backgroundColor: 'var(--color-bg-surface)',
-        borderBottom: '1px solid var(--color-border-subtle)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 90,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+    <header className="app-header">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
         <button
           onClick={onToggleSidebar}
-          style={{ padding: '8px', borderRadius: '6px', color: 'var(--color-text-main)' }}
-          aria-label="Toggle navigation sidebar"
+          style={{
+            padding: '8px',
+            borderRadius: '6px',
+            color: 'var(--color-text-main)',
+            minWidth: '40px',
+            minHeight: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          aria-label="Toggle navigation sidebar menu"
         >
           <Menu size={22} />
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
           <div
             style={{
-              width: '34px',
-              height: '34px',
+              width: '32px',
+              height: '32px',
               borderRadius: '8px',
               backgroundColor: 'var(--color-primary-800)',
               color: '#ffffff',
@@ -50,52 +46,79 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenNotificat
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 800,
-              fontSize: '1rem',
+              fontSize: '0.95rem',
+              flexShrink: 0,
             }}
           >
             नि
           </div>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--color-primary-900)', letterSpacing: '0.02em' }}>
+          <div style={{ minWidth: 0 }}>
+            <div
+              style={{
+                fontWeight: 800,
+                fontSize: 'clamp(0.95rem, 2vw, 1.15rem)',
+                color: 'var(--color-primary-900)',
+                letterSpacing: '0.02em',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
               {t.appName}
             </div>
-            <div style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)', fontWeight: 500 }}>
+            <div
+              className="desktop-only"
+              style={{
+                fontSize: '0.72rem',
+                color: 'var(--color-text-subtle)',
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
               {t.appSubtitle}
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
         {/* Notification Bell */}
         <button
           onClick={onOpenNotifications}
           style={{
             position: 'relative',
             padding: '8px',
+            minWidth: '40px',
+            minHeight: '40px',
             borderRadius: '50%',
             color: 'var(--color-text-muted)',
             backgroundColor: 'var(--color-bg-subtle)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-          aria-label="View notifications"
+          aria-label={`View notifications, ${unreadCount} unread`}
         >
-          <Bell size={20} />
+          <Bell size={19} />
           {unreadCount > 0 && (
             <span
               style={{
                 position: 'absolute',
-                top: '4px',
-                right: '4px',
-                width: '18px',
+                top: '3px',
+                right: '3px',
+                minWidth: '18px',
                 height: '18px',
-                borderRadius: '50%',
+                borderRadius: '9px',
                 backgroundColor: 'var(--color-danger)',
                 color: '#fff',
-                fontSize: '0.7rem',
+                fontSize: '0.68rem',
                 fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                padding: '0 4px',
               }}
             >
               {unreadCount}
@@ -109,21 +132,44 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenNotificat
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              padding: '6px 12px',
+              gap: '6px',
+              padding: '5px 10px',
+              minHeight: '38px',
               borderRadius: '9999px',
               backgroundColor: 'var(--color-bg-subtle)',
               border: '1px solid var(--color-border-subtle)',
+              maxWidth: '180px',
             }}
           >
-            <User size={16} color="var(--color-primary-700)" />
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{user.fullName}</span>
+            <User size={16} color="var(--color-primary-700)" style={{ flexShrink: 0 }} />
+            <span
+              style={{
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {user.fullName}
+            </span>
             <button
               onClick={logout}
               title="Logout"
-              style={{ color: 'var(--color-text-subtle)', display: 'flex', alignItems: 'center', marginLeft: 4 }}
+              aria-label="Logout"
+              style={{
+                color: 'var(--color-text-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '4px',
+                minWidth: '28px',
+                minHeight: '28px',
+                borderRadius: '50%',
+                flexShrink: 0,
+              }}
             >
-              <LogOut size={16} />
+              <LogOut size={15} />
             </button>
           </div>
         )}

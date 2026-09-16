@@ -21,25 +21,28 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       className="nivaran-card"
       style={{
         textAlign: 'center',
-        padding: '48px 24px',
+        padding: 'clamp(28px, 6vw, 48px) 16px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '12px',
+        width: '100%',
       }}
     >
-      <div style={{ color: 'var(--color-primary-600)', opacity: 0.8 }}>
-        {icon || <Inbox size={48} />}
+      <div style={{ color: 'var(--color-primary-600)', opacity: 0.85 }}>
+        {icon || <Inbox size={42} />}
       </div>
-      <h3 style={{ fontSize: '1.15rem', color: 'var(--color-primary-900)' }}>{title}</h3>
+      <h3 style={{ fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)', color: 'var(--color-primary-900)' }}>
+        {title}
+      </h3>
       {description && (
-        <p style={{ color: 'var(--color-text-subtle)', maxWidth: '420px', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--color-text-subtle)', maxWidth: '420px', fontSize: '0.88rem' }}>
           {description}
         </p>
       )}
       {actionText && onAction && (
-        <button className="btn btn-primary" onClick={onAction} style={{ marginTop: '8px' }}>
+        <button className="btn btn-primary btn-mobile-full" onClick={onAction} style={{ marginTop: '8px' }}>
           {actionText}
         </button>
       )}
