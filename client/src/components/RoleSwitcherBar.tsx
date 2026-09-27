@@ -67,6 +67,7 @@ export const RoleSwitcherBar: React.FC = () => {
           >
             <option value="en">English</option>
             <option value="hi">हिन्दी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
             <option value="pb">ਪੰਜਾਬੀ (Punjabi)</option>
           </select>
         </div>

@@ -1,4 +1,4 @@
-export type Language = 'en' | 'hi' | 'pb';
+export type Language = 'en' | 'hi' | 'ta' | 'pb';
 
 export const translations = {
   en: {
@@ -137,6 +137,75 @@ export const translations = {
     noAppointments: 'आज के लिए कोई खरीद नियुक्ति निर्धारित नहीं है।',
     queueError: 'कतार स्थिति प्राप्त करने में असमर्थ। कृपया पुनः प्रयास करें।',
     slotBookedSuccess: 'स्लॉट सफलतापूर्वक बुक हो गया! आपका टोकन नंबर जारी कर दिया गया है।',
+  },
+
+  ta: {
+    // Navigation
+    appName: 'நிவாரண் (NIVARAN)',
+    appSubtitle: 'ஸ்மார்ட் வேளாண்மை கொள்முதல் மற்றும் மண்டி மேலாண்மை தளம்',
+    farmerDashboard: 'விவசாயி தளம்',
+    bookSlot: 'மண்டி நேரம் முன்பதிவு',
+    myTokens: 'எனது டோக்கன் மற்றும் நேரடி வரிசை',
+    myPayments: 'வங்கி கணக்கு (DBT) செலுத்தல் நிலை',
+    centreAdmin: 'மண்டி மேலாளர் கட்டுப்பாட்டகம்',
+    queueOperator: 'வரிசை கவுண்டர் மேசை',
+    qualityOfficer: 'தர பரிசோதனை ஆய்வகம்',
+    weighmentDesk: 'எடை மேடை நிலையம்',
+    financeDesk: 'PFMS நிதி மற்றும் வங்கி செலுத்துகை',
+    mandiBoard: 'பொது வரிசை காட்சி பலகை',
+    cultivationCosts: 'உற்பத்தி செலவு vs MSP',
+    auditLogs: 'தணிக்கை பதிவு',
+    switchRole: 'சோதனை பங்கை மாற்றுக',
+    logout: 'வெளியேறு',
+
+    // Common Statuses
+    active: 'செயலில் உள்ளது',
+    scheduled: 'முன்பதிவு செய்யப்பட்டது',
+    checkedIn: 'மண்டியில் வருகை பதிவு செய்யப்பட்டது',
+    waiting: 'வரிசையில் காத்திருக்கிறது',
+    called: 'டோக்கன் அழைக்கப்பட்டது',
+    processing: 'பரிசோதனை / எடை நடைபெறுகிறது',
+    completed: 'கொள்முதல் முடிந்தது',
+    delayed: 'மண்டி தாமதம்',
+    extended: 'காலநீட்டிப்பு பாதுகாக்கப்பட்டது',
+    cancelled: 'ரத்து செய்யப்பட்டது',
+
+    // Farmer Core Outcomes
+    nextActionTitle: 'அடுத்த நடவடிக்கை',
+    tokenNumber: 'டோக்கன் எண்',
+    queuePosition: 'நேரடி வரிசை நிலை',
+    farmersAhead: 'காத்திருக்கும் விவசாயிகள்',
+    estimatedWaitTime: 'எதிர்பார்க்கப்படும் காத்திருப்பு நேரம்',
+    centreName: 'கொள்முதல் மையம்',
+    allocatedQty: 'ஒதுக்கப்பட்ட அளவு',
+    procuredQty: 'ஏற்றுக்கொள்ளப்பட்ட அளவு',
+    payableAmount: 'மொத்த தொகை (ரூ)',
+    qualityStatus: 'தர பரிசோதனை நிலை',
+    paymentStatus: 'DBT வங்கி செலுத்தல் நிலை',
+    checkInAction: 'வருகை பதிவு செய்க (Check-In)',
+    viewReceipt: 'டிஜிட்டல் ரசீது',
+
+    // Timeline Steps
+    stepRegistration: 'பதிவு',
+    stepBooking: 'முன்பதிவு',
+    stepToken: 'டோக்கன் வழங்கல்',
+    stepCheckIn: 'மண்டி வருகை',
+    stepQuality: 'தர பரிசோதனை',
+    stepWeighment: 'எடை பதிவு',
+    stepConfirmed: 'கொள்முதல் உறுதி',
+    stepPayment: 'DBT வங்கி செலுத்தல்',
+
+    // Congestion & Delay
+    congestionLow: 'இயல்பான நிலை (நேரத்திற்கு வரவும்)',
+    congestionModerate: 'மிதமான கூட்டம் (மாதிரி தயார் செய்யவும்)',
+    congestionHigh: 'அதிக கூட்டம் (தானியங்கி பாதுகாப்பு)',
+    congestionCritical: 'கடுமையான தாமதம் (காலநீட்டிப்பு)',
+    delayProtectionNotice: 'பாதுகாப்பு அறிவிப்பு: மண்டி தாமதம் காரணமாக உங்கள் டோக்கன் காலநீட்டிப்பு செய்யப்பட்டது.',
+
+    // Notifications & Errors
+    noAppointments: 'இன்று முன்பதிவு எதுவும் இல்லை.',
+    queueError: 'வரிசை நிலையை பெற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+    slotBookedSuccess: 'முன்பதிவு வெற்றி! டோக்கன் எண் வழங்கப்பட்டது.',
   },
 
   pb: {
