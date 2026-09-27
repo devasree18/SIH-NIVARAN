@@ -4,16 +4,16 @@
    ========================================================================== */
 
 :root {
-  /* Brand Agricultural Green Palette */
-  --color-primary-900: #081c15;
-  --color-primary-800: #1b4332;
-  --color-primary-700: #2d6a4f;
-  --color-primary-600: #40916c;
-  --color-primary-500: #52b788;
-  --color-primary-400: #74c69d;
-  --color-primary-200: #b7e4c7;
-  --color-primary-100: #d8f3dc;
-  --color-primary-50: #f0fdf4;
+  /* Brand Modern Indigo & Slate Blue Palette */
+  --color-primary-900: #0f172a;
+  --color-primary-800: #312e81;
+  --color-primary-700: #4338ca;
+  --color-primary-600: #4f46e5;
+  --color-primary-500: #6366f1;
+  --color-primary-400: #818cf8;
+  --color-primary-200: #c7d2fe;
+  --color-primary-100: #e0e7ff;
+  --color-primary-50: #eef2ff;
 
   /* Natural Warm Neutrals */
   --color-bg-base: #f8f9fa;
@@ -526,7 +526,7 @@ a:focus-visible {
 .form-select:focus,
 .form-textarea:focus {
   border-color: var(--color-primary-600);
-  box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
 .form-hint {

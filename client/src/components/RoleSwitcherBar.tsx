@@ -24,7 +24,7 @@ export const RoleSwitcherBar: React.FC = () => {
     <div
       className="role-switcher-bar"
       style={{
-        backgroundColor: '#1b4332',
+        backgroundColor: '#0f172a',
         color: '#ffffff',
         padding: '8px clamp(12px, 3vw, 20px)',
         display: 'flex',
@@ -39,7 +39,7 @@ export const RoleSwitcherBar: React.FC = () => {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-        <Shield size={16} color="#74c69d" style={{ flexShrink: 0 }} />
+        <Shield size={16} color="#818cf8" style={{ flexShrink: 0 }} />
         <span style={{ fontWeight: 600 }}>Evaluation Toolbar:</span>
         <span style={{ opacity: 0.85, fontSize: '0.78rem' }}>Role Access Simulation</span>
       </div>
@@ -55,9 +55,9 @@ export const RoleSwitcherBar: React.FC = () => {
             value={language}
             onChange={(e) => setLanguage(e.target.value as any)}
             style={{
-              background: '#2d6a4f',
+              background: '#1e293b',
               color: '#ffffff',
-              border: '1px solid #52b788',
+              border: '1px solid #4f46e5',
               borderRadius: '4px',
               padding: '5px 8px',
               fontSize: '0.8rem',
@@ -82,9 +82,9 @@ export const RoleSwitcherBar: React.FC = () => {
             onChange={handleRoleChange}
             disabled={loading}
             style={{
-              background: '#2d6a4f',
+              background: '#1e293b',
               color: '#ffffff',
-              border: '1px solid #74c69d',
+              border: '1px solid #6366f1',
               borderRadius: '4px',
               padding: '5px 8px',
               fontSize: '0.82rem',

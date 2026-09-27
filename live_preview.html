@@ -10,10 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #15803d;
-      --primary-dark: #166534;
-      --primary-light: #dcfce7;
-      --accent: #d97706;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #e0e7ff;
+      --accent: #3b82f6;
       --bg: #f8fafc;
       --surface: #ffffff;
       --border: #e2e8f0;
@@ -66,8 +66,8 @@
     .role-badge.active {
       background: var(--primary);
       color: #fff;
-      border-color: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+      border-color: #818cf8;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
     }
 
     /* Header */
@@ -93,7 +93,7 @@
     .logo-icon {
       width: 38px;
       height: 38px;
-      background: linear-gradient(135deg, #15803d, #166534);
+      background: linear-gradient(135deg, #4f46e5, #3730a3);
       color: #fff;
       border-radius: 10px;
       display: flex;
@@ -308,7 +308,7 @@
   <div class="role-bar">
     <div>
       <span data-i18n="sihHeader">SIH26032 • MandiSync | Live Evaluation Role:</span>
-      <span id="currentRoleDisplay" style="color: #4ade80; font-weight: 800;">FARMER</span>
+      <span id="currentRoleDisplay" style="color: #818cf8; font-weight: 800;">FARMER</span>
     </div>
     <div style="display: flex; gap: 6px;">
       <div class="role-badge active" id="role-FARMER" onclick="switchRole('FARMER')" data-i18n="roleFarmer">🌾 Farmer</div>
@@ -353,11 +353,11 @@
     <div id="farmer-view" class="view-section active">
       <div class="grid-2" style="margin-bottom: 24px;">
         <!-- Farmer Profile Card -->
-        <div class="card" style="background: linear-gradient(135deg, #15803d, #166534); color: #fff;">
+        <div class="card" style="background: linear-gradient(135deg, #4f46e5, #312e81); color: #fff;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
             <div>
               <div style="font-size: 1.35rem; font-weight: 900;" data-i18n="farmerName">Ramesh Kumar Chaudhary</div>
-              <div style="font-size: 0.85rem; color: #a7f3d0;" data-i18n="farmerSub">PM-Kisan: PMK-HR-8910234 • Village Taraori, Karnal</div>
+              <div style="font-size: 0.85rem; color: #c7d2fe;" data-i18n="farmerSub">PM-Kisan: PMK-HR-8910234 • Village Taraori, Karnal</div>
             </div>
             <span class="badge badge-success" data-i18n="verifiedBadge">✓ 100% Verified</span>
           </div>
@@ -369,9 +369,9 @@
         </div>
 
         <!-- Active Token Live Status -->
-        <div class="card" style="border-left: 6px solid #16a34a;">
+        <div class="card" style="border-left: 6px solid #4f46e5;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <div style="font-size: 1.15rem; font-weight: 900; color: #166534;" data-i18n="activeTokenTitle">Active Token #TKN-KNL-01-001</div>
+            <div style="font-size: 1.15rem; font-weight: 900; color: #3730a3;" data-i18n="activeTokenTitle">Active Token #TKN-KNL-01-001</div>
             <span class="badge badge-danger" data-i18n="counterStatus">Now Serving at Counter #1</span>
           </div>
           <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;" data-i18n="tokenDetails">
@@ -433,14 +433,14 @@
       <div class="grid-2">
         <div class="card">
           <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-            <h4 style="font-weight: 800; color: #166534;" data-i18n="nowServingHeader">🟢 Now Processing at Counters</h4>
+            <h4 style="font-weight: 800; color: #4338ca;" data-i18n="nowServingHeader">🟢 Now Processing at Counters</h4>
             <span class="badge badge-success" data-i18n="countersActiveBadge">4 Counters Active</span>
           </div>
 
           <div id="nowServingList" style="display: flex; flex-direction: column; gap: 10px;">
-            <div style="padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; display: flex; justify-content: space-between;">
+            <div style="padding: 12px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px; display: flex; justify-content: space-between;">
               <div>
-                <div style="font-weight: 800; color: #166534;">#TKN-KNL-01-001 (Ramesh Kumar)</div>
+                <div style="font-weight: 800; color: #3730a3;">#TKN-KNL-01-001 (Ramesh Kumar)</div>
                 <div style="font-size: 0.8rem; color: #334155;" data-i18n="servingItem1">40 Qtl Wheat • Assigned to Counter #1</div>
               </div>
               <span class="badge badge-danger">Counter #1</span>
@@ -478,7 +478,7 @@
       <div class="grid-2" style="max-width: 920px; margin: 0 auto;">
         <!-- Feature Phone Mockup -->
         <div class="phone-body">
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #4ade80; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #818cf8; margin-bottom: 8px;">
             <span data-i18n="ivrCallStatus">🟢 CALL CONNECTED (1800-MANDISYNC)</span>
             <span>00:24</span>
           </div>
@@ -510,7 +510,7 @@
 
           <div id="smsInbox" style="display: flex; flex-direction: column; gap: 10px;">
             <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem;" id="initialSms">
-              <div style="font-weight: 800; color: #15803d; margin-bottom: 4px;" data-i18n="smsMsgTitle">[MandiSync] टोकन पुष्टि:</div>
+              <div style="font-weight: 800; color: #4338ca; margin-bottom: 4px;" data-i18n="smsMsgTitle">[MandiSync] टोकन पुष्टि:</div>
               <span data-i18n="smsMsgBody">आपका टोकन #TKN-KNL-01-001 (गेहूं, 40 क्विंटल) करनाल मंडी के लिए बुक हो गया है। समय: आज 08:30 AM, कतार क्रम: #1।</span>
             </div>
           </div>
@@ -574,9 +574,9 @@
           <tr><td><strong data-i18n="rcptToken">Token ID:</strong></td><td>#TKN-KNL-01-001</td></tr>
           <tr><td><strong data-i18n="rcptProduce">Produce & Grade:</strong></td><td>40.0 Qtl Wheat (Grade A, Moisture 11.2%)</td></tr>
           <tr><td><strong data-i18n="rcptMsp">MSP Rate:</strong></td><td>₹2,425.00 / Qtl</td></tr>
-          <tr style="background: #f0fdf4; font-size: 1.1rem; font-weight: 900;">
+          <tr style="background: #eef2ff; font-size: 1.1rem; font-weight: 900;">
             <td data-i18n="rcptNet">Net DBT Payable:</td>
-            <td style="color: #15803d;">₹97,000.00</td>
+            <td style="color: #4338ca;">₹97,000.00</td>
           </tr>
         </table>
 
@@ -597,7 +597,7 @@
       <div class="card" style="max-width: 700px; margin: 0 auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
           <div>
-            <div style="font-size: 1.25rem; font-weight: 900; color: #16a34a;" data-i18n="dbtAmount">₹97,000.00 Deposited</div>
+            <div style="font-size: 1.25rem; font-weight: 900; color: #4338ca;" data-i18n="dbtAmount">₹97,000.00 Deposited</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Payment #PAY-2026-9001 • UTR: PFMS-NEFT-2026-884102</div>
           </div>
           <span class="badge badge-success" data-i18n="creditedBadge">✓ 100% Credited</span>
@@ -1053,8 +1053,8 @@
         }
 
         const newMsg = document.createElement('div');
-        newMsg.style = 'padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; font-size: 0.85rem; margin-top: 8px;';
-        newMsg.innerHTML = `<div style="font-weight: 800; color: #166534;">${dict.smsMsgTitle}</div> ${dict.smsMsgBody.replace('01-001', '01-002').replace('08:30', '09:30').replace('#1', '#2')}`;
+        newMsg.style = 'padding: 12px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px; font-size: 0.85rem; margin-top: 8px;';
+        newMsg.innerHTML = `<div style="font-weight: 800; color: #4338ca;">${dict.smsMsgTitle}</div> ${dict.smsMsgBody.replace('01-001', '01-002').replace('08:30', '09:30').replace('#1', '#2')}`;
         inbox.prepend(newMsg);
         ivrStep = 1;
       }
