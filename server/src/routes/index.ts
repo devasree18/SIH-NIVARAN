@@ -17,9 +17,18 @@ import { delayController } from '../controllers/delayController';
 import { notificationController } from '../controllers/notificationController';
 import { cultivationCostController } from '../controllers/cultivationCostController';
 import { auditController } from '../controllers/auditController';
-import { dashboardController } from '../controllers/dashboardController';
+import { ivrController } from '../controllers/ivrController';
+import { antiGhostProtection } from '../middleware/antiGhostMiddleware';
+import { procurementPipelineController } from '../controllers/procurementPipelineController';
 
 const router = Router();
+
+// -----------------------------------------------------------------------------
+// ZERO-UI TELEPHONY & IVR SERVICE WEBHOOKS
+// -----------------------------------------------------------------------------
+router.post('/ivr/webhook', ivrController.handleWebhook);
+router.all('/ivr/webhook', ivrController.handleWebhook);
+router.get('/ivr/logs', authenticateToken, ivrController.getCallLogs);
 
 // 1. AUTH & USER
 router.post('/auth/login', authController.login);
@@ -49,11 +58,10 @@ router.post(
   slotController.generateDailySlots
 );
 
-// 5. BOOKINGS & TOKENS
+// 5. BOOKINGS & TOKENS (WITH ANTI-GHOST PROTECTION)
 router.post(
   '/bookings',
-  authenticateToken,
-  requireRole(UserRole.FARMER, UserRole.CENTRE_OPERATOR),
+  antiGhostProtection,
   bookingController.createBooking
 );
 router.get(
@@ -70,7 +78,7 @@ router.post(
 );
 router.get('/bookings/token/:tokenId/receipt', bookingController.getDigitalReceipt);
 
-// 6. SMART ARRIVAL & LIVE QUEUE
+// 6. SMART ARRIVAL & LIVE QUEUE (WITH AUTO-SWAPPING ENGINE)
 router.post('/queue/check-in', queueController.checkIn);
 router.get('/queue/board/:centreId', queueController.getLiveQueueBoard);
 router.post(
@@ -79,12 +87,18 @@ router.post(
   requireRole(UserRole.CENTRE_OPERATOR, UserRole.CENTRE_MANAGER),
   queueController.callNext
 );
+router.post('/queue/auto-swap/:centreId', procurementPipelineController.triggerAutoSwap);
 router.patch(
   '/queue/centre/:centreId/counters',
   authenticateToken,
   requireRole(UserRole.CENTRE_OPERATOR, UserRole.CENTRE_MANAGER),
   queueController.setCounterStatus
 );
+
+// 7. 12-STEP PROCUREMENT PIPELINE STAGES
+router.post('/procurement/gate-scan', procurementPipelineController.gateCheckInScan);
+router.get('/procurement/gate-pass/:tokenId', procurementPipelineController.generateGatePassReceipt);
+router.get('/procurement/dbt-ledger/:farmerId', procurementPipelineController.getDbtPaymentLedger);
 
 // 7. QUALITY ASSAY
 router.get(

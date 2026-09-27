@@ -333,3 +333,74 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([actor])
 }
+
+// -----------------------------------------------------------------------------
+// TELEPHONY & ZERO-UI INTEGRATION MODULES
+// -----------------------------------------------------------------------------
+
+model IVRCallLog {
+  id               String   @id @default(uuid())
+  callSid          String   @unique // Provider Call ID (Twilio/Exotel)
+  phoneNumber      String
+  language         String   @default("hi") // hi, en, ta, pb
+  currentStep      String   @default("WELCOME") // WELCOME, CROP_SELECT, QTY_ENTER, SLOT_CONFIRM, COMPLETED
+  dtmfInputs       String   // JSON string of digits pressed
+  farmerId         String?
+  tokenId          String?
+  bookingId        String?
+  durationSeconds  Int      @default(0)
+  callStatus       String   @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED, FAILED, HANGUP
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([phoneNumber])
+}
+
+model TelephonyMessageLog {
+  id           String   @id @default(uuid())
+  messageId    String   @unique // SMS/WhatsApp gateway ID
+  recipient    String   // Mobile phone number
+  channel      String   // SMS, WHATSAPP, VOICE_CALL
+  language     String   @default("hi")
+  templateCode String   // TOKEN_CONFIRMATION, GATE_CHECKIN, QUEUE_CALLOUT, PAYMENT_DEPOSITED
+  content      String   // Rendered message body
+  status       String   @default("SENT") // SENT, DELIVERED, FAILED, READ
+  retryCount   Int      @default(0)
+  sentAt       DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([recipient, status])
+}
+
+model AntiGhostVerification {
+  id               String   @id @default(uuid())
+  identifier       String   // Mobile number, PM-Kisan ID, or Aadhaar Masked
+  identifierType   String   // MOBILE, PM_KISAN, AADHAAR
+  otpCode          String?
+  otpExpiresAt     DateTime?
+  attemptsCount    Int      @default(0)
+  isVerified       Boolean  @default(false)
+  verifiedAt       DateTime?
+  rateLimitWindow  DateTime @default(now())
+  requestCount24h  Int      @default(1)
+  blockedUntil     DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([identifier, identifierType])
+}
+
+model QueueAutoSwapLog {
+  id                 String   @id @default(uuid())
+  centreId           String
+  originalTokenId    String
+  swappedTokenId     String
+  reason             String   // LATE_ARRIVAL, NO_SHOW, WEIGHBRIDGE_BYPASS, MANUAL_OVERRIDE
+  originalPosition   Int
+  swappedPosition    Int
+  notificationsSent  Boolean  @default(true)
+  timestamp          DateTime @default(now())
+
+  @@index([centreId, timestamp])
+}
+
