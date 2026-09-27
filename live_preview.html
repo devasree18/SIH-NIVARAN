@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MandiSync - Smart Agricultural Procurement & Zero-UI Platform (SIH26032)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #15803d;
+      --primary-dark: #166534;
+      --primary-light: #dcfce7;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --info: #0284c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Role Switcher Bar */
+    .role-bar {
+      background: #0f172a;
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .role-badge {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .role-badge.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #15803d, #166534);
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .nav-btn.active {
+      background: #fff;
+      color: var(--primary-dark);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 24px;
+      max-width: 1380px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid & Cards */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-danger { background: #fee2e2; color: #991b1b; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    /* Button Phone Mockup */
+    .phone-body {
+      background: #0f172a;
+      border-radius: 28px;
+      padding: 22px;
+      color: #fff;
+      max-width: 380px;
+      margin: 0 auto;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+      border: 4px solid #334155;
+    }
+
+    .phone-screen {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 170px;
+      margin-bottom: 16px;
+      border: 1px solid #475569;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #f8fafc;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .key-btn {
+      background: #334155;
+      color: #fff;
+      border: 1px solid #475569;
+      padding: 14px 0;
+      border-radius: 10px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    .key-btn:hover { background: #475569; }
+    .key-btn:active { transform: scale(0.96); }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #f8fafc;
+      text-align: left;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      transition: all 0.15s;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #f8fafc; }
+
+    /* Receipt Box */
+    .receipt-box {
+      border: 2px dashed #0f172a;
+      border-radius: 20px;
+      padding: 28px;
+      background: #fff;
+      max-width: 640px;
+      margin: 0 auto;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+    }
+
+    .language-pill-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+
+    .lang-pill {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .lang-pill.active {
+      background: var(--primary);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Evaluator Rapid Role Switcher -->
+  <div class="role-bar">
+    <div>
+      <span data-i18n="sihHeader">SIH26032 • MandiSync | Live Evaluation Role:</span>
+      <span id="currentRoleDisplay" style="color: #4ade80; font-weight: 800;">FARMER</span>
+    </div>
+    <div style="display: flex; gap: 6px;">
+      <div class="role-badge active" id="role-FARMER" onclick="switchRole('FARMER')" data-i18n="roleFarmer">🌾 Farmer</div>
+      <div class="role-badge" id="role-OPERATOR" onclick="switchRole('OPERATOR')" data-i18n="roleOperator">📋 Queue Operator</div>
+      <div class="role-badge" id="role-MANAGER" onclick="switchRole('MANAGER')" data-i18n="roleManager">🏛️ Mandi Manager</div>
+      <div class="role-badge" id="role-QUALITY" onclick="switchRole('QUALITY')" data-i18n="roleQuality">🧪 Quality Officer</div>
+      <div class="role-badge" id="role-WEIGH" onclick="switchRole('WEIGH')" data-i18n="roleWeigh">⚖️ Weighbridge</div>
+      <div class="role-badge" id="role-FINANCE" onclick="switchRole('FINANCE')" data-i18n="roleFinance">💳 PFMS Finance</div>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-icon">नि</div>
+      <div>
+        <div style="font-weight: 900; font-size: 1.2rem; color: var(--primary-dark);" data-i18n="appName">MANDISYNC</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);" data-i18n="appSubtitle">Smart Procurement & Zero-UI Platform</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-btn active" id="btn-farmer-view" onclick="switchView('farmer-view')" data-i18n="navFarmer">Farmer Portal</button>
+      <button class="nav-btn" id="btn-queue-view" onclick="switchView('queue-view')" data-i18n="navQueue">Dynamic Queue Board</button>
+      <button class="nav-btn" id="btn-ivr-view" onclick="switchView('ivr-view')" data-i18n="navIvr">Zero-UI Phone Helpline</button>
+      <button class="nav-btn" id="btn-analytics-view" onclick="switchView('analytics-view')" data-i18n="navAnalytics">Capacity Analytics</button>
+      <button class="nav-btn" id="btn-receipt-view" onclick="switchView('receipt-view')" data-i18n="navReceipt">Digital Gate Pass</button>
+      <button class="nav-btn" id="btn-payment-view" onclick="switchView('payment-view')" data-i18n="navPayment">DBT Ledger</button>
+    </div>
+
+    <!-- Multi-Lingual Quick Selector Pills -->
+    <div class="language-pill-container">
+      <button class="lang-pill" id="lang-en" onclick="setLanguage('en')">English</button>
+      <button class="lang-pill active" id="lang-hi" onclick="setLanguage('hi')">हिन्दी</button>
+      <button class="lang-pill" id="lang-ta" onclick="setLanguage('ta')">தமிழ்</button>
+      <button class="lang-pill" id="lang-pb" onclick="setLanguage('pb')">ਪੰਜਾਬੀ</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- VIEW 1: FARMER PORTAL -->
+    <div id="farmer-view" class="view-section active">
+      <div class="grid-2" style="margin-bottom: 24px;">
+        <!-- Farmer Profile Card -->
+        <div class="card" style="background: linear-gradient(135deg, #15803d, #166534); color: #fff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <div style="font-size: 1.35rem; font-weight: 900;" data-i18n="farmerName">Ramesh Kumar Chaudhary</div>
+              <div style="font-size: 0.85rem; color: #a7f3d0;" data-i18n="farmerSub">PM-Kisan: PMK-HR-8910234 • Village Taraori, Karnal</div>
+            </div>
+            <span class="badge badge-success" data-i18n="verifiedBadge">✓ 100% Verified</span>
+          </div>
+          <div style="display: flex; gap: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 12px; margin-top: 12px; font-size: 0.85rem;">
+            <div><span data-i18n="landLabel">Verified Land:</span> <strong>8.5 Acres</strong></div>
+            <div><span data-i18n="capLabel">Max Yield Cap:</span> <strong>212.5 Qtl</strong></div>
+            <div><span data-i18n="aadhaarLabel">Aadhaar:</span> <strong>XXXX-XXXX-4821</strong></div>
+          </div>
+        </div>
+
+        <!-- Active Token Live Status -->
+        <div class="card" style="border-left: 6px solid #16a34a;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <div style="font-size: 1.15rem; font-weight: 900; color: #166534;" data-i18n="activeTokenTitle">Active Token #TKN-KNL-01-001</div>
+            <span class="badge badge-danger" data-i18n="counterStatus">Now Serving at Counter #1</span>
+          </div>
+          <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;" data-i18n="tokenDetails">
+            40.0 Qtl Wheat • Karnal Central Mandi Hub • Scheduled: Today 08:30 AM
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" onclick="switchView('receipt-view')" data-i18n="btnViewReceipt">View Digital Gate Pass</button>
+            <button class="btn btn-outline" onclick="switchView('queue-view')" data-i18n="btnTrackQueue">Track Live Queue Position</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Book New Smart Slot Form -->
+      <div class="card">
+        <h3 style="margin-bottom: 16px; font-weight: 900;" data-i18n="bookFormTitle">Smart Concurrency Slot Booking & Anti-Ghost Protection</h3>
+        <div class="grid-3" style="margin-bottom: 16px;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;" data-i18n="labelCrop">Select Crop (MSP Guaranteed):</label>
+            <select id="bookCrop" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-weight: 700;">
+              <option value="Wheat" data-i18n="optWheat">Wheat (गेहूं) - ₹2,425/Qtl</option>
+              <option value="Paddy" data-i18n="optPaddy">Paddy (धान) - ₹2,320/Qtl</option>
+              <option value="Mustard" data-i18n="optMustard">Mustard (सरसों) - ₹5,650/Qtl</option>
+              <option value="Gram" data-i18n="optGram">Gram (चना) - ₹5,440/Qtl</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;" data-i18n="labelQty">Produce Quantity (Quintals):</label>
+            <input type="number" id="bookQty" value="40" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-weight: 700;">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;" data-i18n="labelSlot">Preferred Slot Time:</label>
+            <select style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-weight: 700;">
+              <option data-i18n="optSlot1">Tomorrow: 08:00 - 09:30 AM (Available: 60 Qtl)</option>
+              <option data-i18n="optSlot2">Tomorrow: 09:30 - 11:00 AM (Available: 75 Qtl)</option>
+              <option data-i18n="optSlot3">Tomorrow: 11:00 - 12:30 PM (Available: 50 Qtl)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="simulateBooking()" data-i18n="btnBookSlot">⚡ Confirm Smart Slot & Issue Token</button>
+      </div>
+    </div>
+
+    <!-- VIEW 2: DYNAMIC QUEUE BOARD -->
+    <div id="queue-view" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-weight: 900;" data-i18n="queueTitle">Karnal Central Mandi • Live Queue Board</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="queueSubtitle">Real-time dispatch, automated counter callout & anti-delay auto-swapping</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" onclick="callNextToken()" data-i18n="btnCallNext">📢 Call Next Token to Counter</button>
+          <button class="btn btn-outline" onclick="autoSwapDelayed()" data-i18n="btnAutoSwap">🔄 Trigger Auto-Swap for Delayed Arrivals</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <h4 style="font-weight: 800; color: #166534;" data-i18n="nowServingHeader">🟢 Now Processing at Counters</h4>
+            <span class="badge badge-success" data-i18n="countersActiveBadge">4 Counters Active</span>
+          </div>
+
+          <div id="nowServingList" style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; display: flex; justify-content: space-between;">
+              <div>
+                <div style="font-weight: 800; color: #166534;">#TKN-KNL-01-001 (Ramesh Kumar)</div>
+                <div style="font-size: 0.8rem; color: #334155;" data-i18n="servingItem1">40 Qtl Wheat • Assigned to Counter #1</div>
+              </div>
+              <span class="badge badge-danger">Counter #1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <h4 style="font-weight: 800; color: #0284c7;" data-i18n="waitingHeader">👥 Physically Waiting in Pavilion</h4>
+            <span class="badge badge-info" id="waitingCountBadge" data-i18n="waitingBadge">3 Farmers Waiting</span>
+          </div>
+
+          <div id="waitingList" style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: space-between;">
+              <div><strong>#2. TKN-KNL-01-002</strong> - Gurpreet Singh (50 Qtl Wheat)</div>
+              <span class="badge badge-warning" data-i18n="pos1">Position #1</span>
+            </div>
+            <div style="padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: space-between;">
+              <div><strong>#3. TKN-KNL-01-003</strong> - Harpal Singh (35 Qtl Mustard)</div>
+              <span class="badge badge-warning" data-i18n="pos2">Position #2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: ZERO-UI PHONE HELPLINE (IVR) -->
+    <div id="ivr-view" class="view-section">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="font-weight: 900;" data-i18n="ivrTitle">Zero-UI Feature Phone IVR Simulator</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="ivrSubtitle">Empowers button phone farmers without smartphones to book slots via voice & keypad</p>
+      </div>
+
+      <div class="grid-2" style="max-width: 920px; margin: 0 auto;">
+        <!-- Feature Phone Mockup -->
+        <div class="phone-body">
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #4ade80; margin-bottom: 8px;">
+            <span data-i18n="ivrCallStatus">🟢 CALL CONNECTED (1800-MANDISYNC)</span>
+            <span>00:24</span>
+          </div>
+
+          <div class="phone-screen" id="ivrScreen">
+            <!-- Dynamically rendered prompt -->
+          </div>
+
+          <div class="keypad">
+            <button class="key-btn" onclick="pressIvrKey('1')">1</button>
+            <button class="key-btn" onclick="pressIvrKey('2')">2</button>
+            <button class="key-btn" onclick="pressIvrKey('3')">3</button>
+            <button class="key-btn" onclick="pressIvrKey('4')">4</button>
+            <button class="key-btn" onclick="pressIvrKey('5')">5</button>
+            <button class="key-btn" onclick="pressIvrKey('6')">6</button>
+            <button class="key-btn" onclick="pressIvrKey('7')">7</button>
+            <button class="key-btn" onclick="pressIvrKey('8')">8</button>
+            <button class="key-btn" onclick="pressIvrKey('9')">9</button>
+            <button class="key-btn" onclick="pressIvrKey('*')">*</button>
+            <button class="key-btn" onclick="pressIvrKey('0')">0</button>
+            <button class="key-btn" onclick="pressIvrKey('#')">#</button>
+          </div>
+        </div>
+
+        <!-- Simulated Handset SMS Inbox -->
+        <div class="card">
+          <h3 style="font-weight: 800; margin-bottom: 12px;" data-i18n="smsInboxTitle">💬 Handset SMS Inbox (+91 9876543210)</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;" data-i18n="smsInboxSub">Instant multi-lingual SMS notifications dispatched by Telecom Gateway</p>
+
+          <div id="smsInbox" style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem;" id="initialSms">
+              <div style="font-weight: 800; color: #15803d; margin-bottom: 4px;" data-i18n="smsMsgTitle">[MandiSync] टोकन पुष्टि:</div>
+              <span data-i18n="smsMsgBody">आपका टोकन #TKN-KNL-01-001 (गेहूं, 40 क्विंटल) करनाल मंडी के लिए बुक हो गया है। समय: आज 08:30 AM, कतार क्रम: #1।</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: CAPACITY ANALYTICS -->
+    <div id="analytics-view" class="view-section">
+      <h2 style="font-weight: 900; margin-bottom: 6px;" data-i18n="analyticsTitle">Predictive Storage & Throughput Expansion Analytics</h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" data-i18n="analyticsSubtitle">Before vs After MandiSync harvest surge distribution curve</p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat1Title">Peak Congestion Drop</div>
+          <div style="font-size: 1.8rem; font-weight: 900; color: #16a34a;">-42.6%</div>
+          <div style="font-size: 0.75rem; color: #16a34a;" data-i18n="stat1Sub">Zero bottleneck stalls</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat2Title">Weighbridge Utilization</div>
+          <div style="font-size: 1.8rem; font-weight: 900; color: #0284c7;">88.4%</div>
+          <div style="font-size: 0.75rem; color: #0284c7;" data-i18n="stat2Sub">Continuous throughput</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat3Title">Average Farmer Wait</div>
+          <div style="font-size: 1.8rem; font-weight: 900; color: #d97706;">18 Mins</div>
+          <div style="font-size: 0.75rem; color: #16a34a;" data-i18n="stat3Sub">Down from 4.5 hours</div>
+        </div>
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="stat4Title">Daily Mandi Inflow</div>
+          <div style="font-size: 1.8rem; font-weight: 900; color: #7e22ce;">1,200 Qtl</div>
+          <div style="font-size: 0.75rem; color: #7e22ce;" data-i18n="stat4Sub">Holding capacity optimal</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="font-weight: 800; margin-bottom: 16px;" data-i18n="chartTitle">Hourly Harvest Arrival Surge (Quintals per Hour)</h4>
+        <div style="height: 200px; display: flex; align-items: flex-end; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+          <div style="flex: 1; text-align: center;"><div style="height: 140px; background: #ef4444; border-radius: 4px; margin-bottom: 4px;"></div>08:00 (Before: 350 Qtl)</div>
+          <div style="flex: 1; text-align: center;"><div style="height: 70px; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>08:00 (MandiSync: 150 Qtl)</div>
+          <div style="flex: 1; text-align: center;"><div style="height: 180px; background: #ef4444; border-radius: 4px; margin-bottom: 4px;"></div>10:00 (Before: 450 Qtl)</div>
+          <div style="flex: 1; text-align: center;"><div style="height: 75px; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>10:00 (MandiSync: 160 Qtl)</div>
+          <div style="flex: 1; text-align: center;"><div style="height: 60px; background: #ef4444; border-radius: 4px; margin-bottom: 4px;"></div>14:00 (Before: 120 Qtl)</div>
+          <div style="flex: 1; text-align: center;"><div style="height: 72px; background: #22c55e; border-radius: 4px; margin-bottom: 4px;"></div>14:00 (MandiSync: 155 Qtl)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: DIGITAL GATE PASS -->
+    <div id="receipt-view" class="view-section">
+      <div class="receipt-box">
+        <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px;">
+          <div style="font-size: 0.75rem; font-weight: 800; color: #64748b; letter-spacing: 1px;" data-i18n="deptTitle">MINISTRY OF AGRICULTURE • MANDISYNC</div>
+          <h2 style="font-weight: 900; margin: 4px 0;" data-i18n="gatePassHeading">Official Mandi Gate Pass & Income Certificate</h2>
+          <div style="font-size: 0.8rem; color: #475569;">Karnal Central Mandi Hub (KNL-MANDI-01) • Receipt #RCPT-KNL-2026-0001</div>
+        </div>
+
+        <table style="margin-bottom: 16px;">
+          <tr><td><strong data-i18n="rcptFarmer">Farmer Name:</strong></td><td>Ramesh Kumar Chaudhary</td></tr>
+          <tr><td><strong data-i18n="rcptPmk">PM-Kisan ID:</strong></td><td>PMK-HR-8910234 (8.5 Acres Verified)</td></tr>
+          <tr><td><strong data-i18n="rcptToken">Token ID:</strong></td><td>#TKN-KNL-01-001</td></tr>
+          <tr><td><strong data-i18n="rcptProduce">Produce & Grade:</strong></td><td>40.0 Qtl Wheat (Grade A, Moisture 11.2%)</td></tr>
+          <tr><td><strong data-i18n="rcptMsp">MSP Rate:</strong></td><td>₹2,425.00 / Qtl</td></tr>
+          <tr style="background: #f0fdf4; font-size: 1.1rem; font-weight: 900;">
+            <td data-i18n="rcptNet">Net DBT Payable:</td>
+            <td style="color: #15803d;">₹97,000.00</td>
+          </tr>
+        </table>
+
+        <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; color: #475569;">
+          <strong>Cryptographic Signature:</strong> SHA256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069<br>
+          <strong data-i18n="dbtSettlementNote">DBT Settlement: 48-Hour Direct Bank Settlement Guaranteed to SBI A/C XXXXXXXX4821</strong>
+        </div>
+
+        <div style="margin-top: 16px; text-align: center;">
+          <button class="btn btn-primary" onclick="window.print()" data-i18n="btnPrint">🖨️ Print Official Certificate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: DBT LEDGER -->
+    <div id="payment-view" class="view-section">
+      <h2 style="font-weight: 900; margin-bottom: 16px;" data-i18n="dbtTitle">5-Stage Direct Benefit Transfer (DBT) Ledger</h2>
+      <div class="card" style="max-width: 700px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+          <div>
+            <div style="font-size: 1.25rem; font-weight: 900; color: #16a34a;" data-i18n="dbtAmount">₹97,000.00 Deposited</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Payment #PAY-2026-9001 • UTR: PFMS-NEFT-2026-884102</div>
+          </div>
+          <span class="badge badge-success" data-i18n="creditedBadge">✓ 100% Credited</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.9rem;">
+          <div data-i18n="stage1">✅ <strong>Stage 1:</strong> Procurement weight & moisture certified (40.0 Qtl Wheat)</div>
+          <div data-i18n="stage2">✅ <strong>Stage 2:</strong> Transmitted to PFMS Central Gateway (Batch #PFMS-2026-891)</div>
+          <div data-i18n="stage3">✅ <strong>Stage 3:</strong> NPCI Aadhaar-Bank Account Validation Passed (SBI)</div>
+          <div data-i18n="stage4">✅ <strong>Stage 4:</strong> RBI Inter-Bank NEFT Clearing Settled</div>
+          <div data-i18n="stage5">✅ <strong>Stage 5:</strong> Amount Credited to Farmer Account (SMS Advice Dispatched)</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Complete Multi-lingual Localization Dictionary
+    const translations = {
+      en: {
+        appName: 'MANDISYNC',
+        appSubtitle: 'Smart Procurement & Zero-UI Platform',
+        sihHeader: 'SIH26032 • MandiSync | Live Evaluation Role:',
+        roleFarmer: '🌾 Farmer',
+        roleOperator: '📋 Queue Operator',
+        roleManager: '🏛️ Mandi Manager',
+        roleQuality: '🧪 Quality Officer',
+        roleWeigh: '⚖️ Weighbridge',
+        roleFinance: '💳 PFMS Finance',
+        navFarmer: 'Farmer Portal',
+        navQueue: 'Dynamic Queue Board',
+        navIvr: 'Zero-UI Phone Helpline',
+        navAnalytics: 'Capacity Analytics',
+        navReceipt: 'Digital Gate Pass',
+        navPayment: 'DBT Ledger',
+        farmerName: 'Ramesh Kumar Chaudhary',
+        farmerSub: 'PM-Kisan: PMK-HR-8910234 • Village Taraori, Karnal',
+        verifiedBadge: '✓ 100% Verified',
+        landLabel: 'Verified Land:',
+        capLabel: 'Max Yield Cap:',
+        aadhaarLabel: 'Aadhaar:',
+        activeTokenTitle: 'Active Token #TKN-KNL-01-001',
+        counterStatus: 'Now Serving at Counter #1',
+        tokenDetails: '40.0 Qtl Wheat • Karnal Central Mandi Hub • Scheduled: Today 08:30 AM',
+        btnViewReceipt: 'View Digital Gate Pass',
+        btnTrackQueue: 'Track Live Queue Position',
+        bookFormTitle: 'Smart Concurrency Slot Booking & Anti-Ghost Protection',
+        labelCrop: 'Select Crop (MSP Guaranteed):',
+        optWheat: 'Wheat (गेहूं) - ₹2,425/Qtl',
+        optPaddy: 'Paddy (धान) - ₹2,320/Qtl',
+        optMustard: 'Mustard (सरसों) - ₹5,650/Qtl',
+        optGram: 'Gram (चना) - ₹5,440/Qtl',
+        labelQty: 'Produce Quantity (Quintals):',
+        labelSlot: 'Preferred Slot Time:',
+        optSlot1: 'Tomorrow: 08:00 - 09:30 AM (Available: 60 Qtl)',
+        optSlot2: 'Tomorrow: 09:30 - 11:00 AM (Available: 75 Qtl)',
+        optSlot3: 'Tomorrow: 11:00 - 12:30 PM (Available: 50 Qtl)',
+        btnBookSlot: '⚡ Confirm Smart Slot & Issue Token',
+        queueTitle: 'Karnal Central Mandi • Live Queue Board',
+        queueSubtitle: 'Real-time dispatch, automated counter callout & anti-delay auto-swapping',
+        btnCallNext: '📢 Call Next Token to Counter',
+        btnAutoSwap: '🔄 Trigger Auto-Swap for Delayed Arrivals',
+        nowServingHeader: '🟢 Now Processing at Counters',
+        countersActiveBadge: '4 Counters Active',
+        servingItem1: '40 Qtl Wheat • Assigned to Counter #1',
+        waitingHeader: '👥 Physically Waiting in Pavilion',
+        waitingBadge: '3 Farmers Waiting',
+        pos1: 'Position #1',
+        pos2: 'Position #2',
+        ivrTitle: 'Zero-UI Feature Phone IVR Simulator',
+        ivrSubtitle: 'Empowers button phone farmers without smartphones to book slots via voice & keypad',
+        ivrCallStatus: '🟢 CALL CONNECTED (1800-MANDISYNC)',
+        ivrPromptDefault: '<strong>[MandiSync IVR Voice Prompt]:</strong><br><br>"Hello Kisan Brother! Welcome to MandiSync. Press 1 for Wheat, 2 for Paddy, 3 for Mustard, 4 for Gram."',
+        smsInboxTitle: '💬 Handset SMS Inbox (+91 9876543210)',
+        smsInboxSub: 'Instant multi-lingual SMS notifications dispatched by Telecom Gateway',
+        smsMsgTitle: '[MandiSync] Token Confirmation:',
+        smsMsgBody: 'Your token #TKN-KNL-01-001 (Wheat, 40 Qtl) is confirmed for Karnal Mandi. Time: Today 08:30 AM, Queue #1.',
+        analyticsTitle: 'Predictive Storage & Throughput Expansion Analytics',
+        analyticsSubtitle: 'Before vs After MandiSync harvest surge distribution curve',
+        stat1Title: 'Peak Congestion Drop',
+        stat1Sub: 'Zero bottleneck stalls',
+        stat2Title: 'Weighbridge Utilization',
+        stat2Sub: 'Continuous throughput',
+        stat3Title: 'Average Farmer Wait',
+        stat3Sub: 'Down from 4.5 hours',
+        stat4Title: 'Daily Mandi Inflow',
+        stat4Sub: 'Holding capacity optimal',
+        chartTitle: 'Hourly Harvest Arrival Surge (Quintals per Hour)',
+        deptTitle: 'MINISTRY OF AGRICULTURE • MANDISYNC',
+        gatePassHeading: 'Official Mandi Gate Pass & Income Certificate',
+        rcptFarmer: 'Farmer Name:',
+        rcptPmk: 'PM-Kisan ID:',
+        rcptToken: 'Token ID:',
+        rcptProduce: 'Produce & Grade:',
+        rcptMsp: 'MSP Rate:',
+        rcptNet: 'Net DBT Payable:',
+        dbtSettlementNote: 'DBT Settlement: 48-Hour Direct Bank Settlement Guaranteed to SBI A/C XXXXXXXX4821',
+        btnPrint: '🖨️ Print Official Certificate',
+        dbtTitle: '5-Stage Direct Benefit Transfer (DBT) Ledger',
+        dbtAmount: '₹97,000.00 Deposited',
+        creditedBadge: '✓ 100% Credited',
+        stage1: '✅ <strong>Stage 1:</strong> Procurement weight & moisture certified (40.0 Qtl Wheat)',
+        stage2: '✅ <strong>Stage 2:</strong> Transmitted to PFMS Central Gateway (Batch #PFMS-2026-891)',
+        stage3: '✅ <strong>Stage 3:</strong> NPCI Aadhaar-Bank Account Validation Passed (SBI)',
+        stage4: '✅ <strong>Stage 4:</strong> RBI Inter-Bank NEFT Clearing Settled',
+        stage5: '✅ <strong>Stage 5:</strong> Amount Credited to Farmer Account (SMS Advice Dispatched)',
+      },
+      hi: {
+        appName: 'मंडीसिंक (MANDISYNC)',
+        appSubtitle: 'स्मार्ट कृषि खरीद और शून्य-यूआई टेलीफोनी प्रणाली',
+        sihHeader: 'SIH26032 • मंडीसिंक | सक्रिय मूल्यांकन भूमिका:',
+        roleFarmer: '🌾 किसान भाई',
+        roleOperator: '📋 कतार संचालक',
+        roleManager: '🏛️ मंडी प्रबंधक',
+        roleQuality: '🧪 गुणवत्ता अधिकारी',
+        roleWeigh: '⚖️ धर्मकांटा',
+        roleFinance: '💳 पीएफएमएस वित्त',
+        navFarmer: 'किसान पोर्टल',
+        navQueue: 'लाइव कतार बोर्ड',
+        navIvr: 'फीचर फोन हेल्पलाइन',
+        navAnalytics: 'क्षमता विश्लेषण',
+        navReceipt: 'डिजिटल गेट पास',
+        navPayment: 'डीबीटी लेज़र',
+        farmerName: 'रमेश कुमार चौधरी',
+        farmerSub: 'पीएम-किसान: PMK-HR-8910234 • गांव तरावड़ी, करनाल',
+        verifiedBadge: '✓ 100% सत्यापित',
+        landLabel: 'सत्यापित भूमि:',
+        capLabel: 'अधिकतम उपज सीमा:',
+        aadhaarLabel: 'आधार:',
+        activeTokenTitle: 'सक्रिय टोकन #TKN-KNL-01-001',
+        counterStatus: 'काउंटर #1 पर बुलाया गया',
+        tokenDetails: '40.0 क्विंटल गेहूं • करनाल केंद्रीय मंडी हब • निर्धारित: आज सुबह 08:30',
+        btnViewReceipt: 'डिजिटल गेट पास देखें',
+        btnTrackQueue: 'लाइव कतार स्थिति ट्रैक करें',
+        bookFormTitle: 'स्मार्ट स्लॉट बुकिंग व एंटी-घोस्ट सुरक्षा',
+        labelCrop: 'फसल चुनें (एमएसपी गारंटीकृत):',
+        optWheat: 'गेहूं (Wheat) - ₹2,425/क्विंटल',
+        optPaddy: 'धान (Paddy) - ₹2,320/क्विंटल',
+        optMustard: 'सरसों (Mustard) - ₹5,650/क्विंटल',
+        optGram: 'चना (Gram) - ₹5,440/क्विंटल',
+        labelQty: 'उपज मात्रा (क्विंटल):',
+        labelSlot: 'पसंदीदा स्लॉट समय:',
+        optSlot1: 'कल: 08:00 - 09:30 AM (उपलब्ध: 60 क्विंटल)',
+        optSlot2: 'कल: 09:30 - 11:00 AM (उपलब्ध: 75 क्विंटल)',
+        optSlot3: 'कल: 11:00 - 12:30 PM (उपलब्ध: 50 क्विंटल)',
+        btnBookSlot: '⚡ स्मार्ट स्लॉट सुरक्षित करें व टोकन लें',
+        queueTitle: 'करनाल केंद्रीय मंडी • लाइव कतार बोर्ड',
+        queueSubtitle: 'वास्तविक समय प्रेषण, स्वचालित काउंटर पुकार व स्वतः-समायोजन',
+        btnCallNext: '📢 अगले टोकन को काउंटर पर बुलाएं',
+        btnAutoSwap: '🔄 विलंबित आगमन हेतु स्वतः-समायोजन चलाएं',
+        nowServingHeader: '🟢 काउंटरों पर सक्रिय प्रक्रिया',
+        countersActiveBadge: '4 काउंटर सक्रिय',
+        servingItem1: '40 क्विंटल गेहूं • काउंटर #1 पर उपस्थित',
+        waitingHeader: '👥 प्रतीक्षालय में उपस्थित किसान',
+        waitingBadge: '3 किसान प्रतीक्षा में',
+        pos1: 'स्थान #1',
+        pos2: 'स्थान #2',
+        ivrTitle: 'शून्य-यूआई फीचर फोन हेल्पलाइन (IVR)',
+        ivrSubtitle: 'स्मार्टफोन के बिना बटन फोन किसानों को वॉयस व कीपैड द्वारा स्लॉट बुकिंग की सुविधा',
+        ivrCallStatus: '🟢 कॉल कनेक्टेड (1800-MANDISYNC)',
+        ivrPromptDefault: '<strong>[मंडीसिंक IVR वॉइस प्रॉम्प्ट]:</strong><br><br>"नमस्ते किसान भाई! मंडीसिंक में आपका स्वागत है। गेहूं के लिए 1 दबाएं। धान के लिए 2 दबाएं। सरसों के लिए 3 दबाएं। चने के लिए 4 दबाएं।"',
+        smsInboxTitle: '💬 हैंडसेट एसएमएस इनबॉक्स (+91 9876543210)',
+        smsInboxSub: 'टेलीकॉम गेटवे द्वारा स्वचालित बहुभाषी एसएमएस संदेश',
+        smsMsgTitle: '[मंडीसिंक] टोकन पुष्टि:',
+        smsMsgBody: 'आपका टोकन #TKN-KNL-01-001 (गेहूं, 40 क्विंटल) करनाल मंडी के लिए बुक हो गया है। समय: आज 08:30 AM, कतार क्रम: #1।',
+        analyticsTitle: 'भविष्यसूचक भंडारण व थ्रूपुट विस्तार विश्लेषण',
+        analyticsSubtitle: 'मंडीसिंक से पहले और बाद का आवक वितरण वक्र',
+        stat1Title: 'पीक भीड़ में कमी',
+        stat1Sub: 'शून्य कतार अवरोध',
+        stat2Title: 'धर्मकांटा उपयोग दर',
+        stat2Sub: 'निरंतर तौल गति',
+        stat3Title: 'औसत किसान प्रतीक्षा',
+        stat3Sub: '4.5 घंटे से घटकर 18 मिनट',
+        stat4Title: 'दैनिक मंडी आवक',
+        stat4Sub: 'भंडारण क्षमता अनुकूलित',
+        chartTitle: 'प्रति घंटा फसल आवक (क्विंटल प्रति घंटा)',
+        deptTitle: 'कृषि एवं किसान कल्याण मंत्रालय • मंडीसिंक',
+        gatePassHeading: 'आधिकारिक मंडी डिजिटल गेट पास व आय प्रमाण',
+        rcptFarmer: 'किसान का नाम:',
+        rcptPmk: 'पीएम-किसान आईडी:',
+        rcptToken: 'टोकन संख्या:',
+        rcptProduce: 'फसल व ग्रेड:',
+        rcptMsp: 'एमएसपी दर:',
+        rcptNet: 'शुद्ध डीबीटी देय राशि:',
+        dbtSettlementNote: 'डीबीटी निपटान: 48 घंटे में सीधे बैंक खाते (एसबीआई खाता XXXXXXXX4821) में भुगतान गारंटी',
+        btnPrint: '🖨️ आधिकारिक रसीद प्रिंट करें',
+        dbtTitle: '5-चरणीय प्रत्यक्ष लाभ अंतरण (DBT) खाता लेज़र',
+        dbtAmount: '₹97,000.00 सीधे बैंक खाते में जमा',
+        creditedBadge: '✓ 100% राशि जमा',
+        stage1: '✅ <strong>चरण 1:</strong> खरीद तौल व नमी परीक्षण प्रमाणित (40.0 क्विंटल गेहूं)',
+        stage2: '✅ <strong>चरण 2:</strong> पीएफएमएस केंद्रीय पोर्टल को प्रेषित (बैच #PFMS-2026-891)',
+        stage3: '✅ <strong>चरण 3:</strong> एनपीसीआई आधार-बैंक खाता सत्यापन सफल (एसबीआई)',
+        stage4: '✅ <strong>चरण 4:</strong> भारतीय रिजर्व बैंक एनईएफटी अंतर-बैंक समाशोधन पूर्ण',
+        stage5: '✅ <strong>चरण 5:</strong> किसान के बैंक खाते में राशि सीधे जमा (एसएमएस प्रेषित)',
+      },
+      ta: {
+        appName: 'மண்டிசின்க் (MANDISYNC)',
+        appSubtitle: 'ஸ்மார்ட் கொள்முதல் & தொலைபேசி IVR தளம்',
+        sihHeader: 'SIH26032 • மண்டிசின்க் | நேரடி மதிப்பீட்டு பங்கு:',
+        roleFarmer: '🌾 விவசாயி',
+        roleOperator: '📋 வரிசை நடத்துனர்',
+        roleManager: '🏛️ மண்டி மேலாளர்',
+        roleQuality: '🧪 தர அதிகாரி',
+        roleWeigh: '⚖️ எடை மேடை',
+        roleFinance: '💳 PFMS நிதி',
+        navFarmer: 'விவசாயி தளம்',
+        navQueue: 'நேரடி வரிசை பலகை',
+        navIvr: 'தொலைபேசி IVR சேவை',
+        navAnalytics: 'கொள்ளளவு பகுப்பாய்வு',
+        navReceipt: 'டிஜிட்டல் நுழைவுச்சீட்டு',
+        navPayment: 'DBT வங்கி கணக்கு',
+        farmerName: 'ரமேஷ் குமார் சவுத்ரி',
+        farmerSub: 'PM-கிசான்: PMK-HR-8910234 • தராவ்ரி, கர்னால்',
+        verifiedBadge: '✓ 100% உறுதிசெய்யப்பட்டது',
+        landLabel: 'உறுதிசெய்யப்பட்ட நிலம்:',
+        capLabel: 'அதிகபட்ச வரம்பு:',
+        aadhaarLabel: 'ஆதார்:',
+        activeTokenTitle: 'செயலில் உள்ள டோக்கன் #TKN-KNL-01-001',
+        counterStatus: 'கவுண்டர் #1-ல் அழைக்கப்பட்டது',
+        tokenDetails: '40.0 குவிண்டால் கோதுமை • கர்னால் மண்டி • நேரம்: இன்று 08:30 AM',
+        btnViewReceipt: 'நுழைவுச்சீட்டைப் பார்க்கவும்',
+        btnTrackQueue: 'நேரடி வரிசையைக் கண்காணிக்கவும்',
+        bookFormTitle: 'ஸ்மார்ட் முன்பதிவு & போலி தடுப்பு பாதுகாப்பு',
+        labelCrop: 'பயிரைத் தேர்ந்தெடுக்கவும் (MSP உத்தரவாதம்):',
+        optWheat: 'கோதுமை (Wheat) - ₹2,425/குவிண்டால்',
+        optPaddy: 'நெல் (Paddy) - ₹2,320/குவிண்டால்',
+        optMustard: 'கடுகு (Mustard) - ₹5,650/குவிண்டால்',
+        optGram: 'கொண்டைக்கடலை (Gram) - ₹5,440/குவிண்டால்',
+        labelQty: 'அளவு (குவிண்டால்):',
+        labelSlot: 'விரும்பும் நேரம்:',
+        optSlot1: 'நாளை: 08:00 - 09:30 AM (கிடைப்பது: 60 குவிண்டால்)',
+        optSlot2: 'நாளை: 09:30 - 11:00 AM (கிடைப்பது: 75 குவிண்டால்)',
+        optSlot3: 'நாளை: 11:00 - 12:30 PM (கிடைப்பது: 50 குவிண்டால்)',
+        btnBookSlot: '⚡ முன்பதிவு செய்து டோக்கன் பெறுக',
+        queueTitle: 'கர்னால் மத்திய மண்டி • நேரடி வரிசை பலகை',
+        queueSubtitle: 'நேரடி மேலாண்மை, கவுண்டர் அழைப்பு மற்றும் தானியங்கி வரிசை மாற்றம்',
+        btnCallNext: '📢 அடுத்த டோக்கனை அழைக்கவும்',
+        btnAutoSwap: '🔄 தாமதமான வருகைகளுக்கு தானியங்கி மாற்றம்',
+        nowServingHeader: '🟢 கவுண்டர்களில் பரிசோதனை நடக்கிறது',
+        countersActiveBadge: '4 கவுண்டர்கள் தயார்',
+        servingItem1: '40 குவிண்டால் கோதுமை • கவுண்டர் #1',
+        waitingHeader: '👥 காத்திருக்கும் விவசாயிகள்',
+        waitingBadge: '3 விவசாயிகள் காத்திருக்கின்றனர்',
+        pos1: 'நிலை #1',
+        pos2: 'நிலை #2',
+        ivrTitle: 'தொலைபேசி IVR சேவை (Zero-UI)',
+        ivrSubtitle: 'ஸ்மார்ட்போன் இல்லாத விவசாயிகளுக்கு குரல் வழி முன்பதிவு',
+        ivrCallStatus: '🟢 அழைப்பு இணைக்கப்பட்டது (1800-MANDISYNC)',
+        ivrPromptDefault: '<strong>[மண்டிசின்க் IVR குரல் வழிகாட்டுதல்]:</strong><br><br>"வணக்கம் விவசாயி அவர்களே! மண்டிசின்க் தளத்திற்கு வரவேற்கிறோம். கோதுமைக்கு 1 அழுத்தவும். நெல்லுக்கு 2 அழுத்தவும். கடுகுக்கு 3 அழுத்தவும். கொண்டைக்கடலைக்கு 4 அழுத்தவும்."',
+        smsInboxTitle: '💬 எஸ்எம்எஸ் பெட்டி (+91 9876543210)',
+        smsInboxSub: 'தொலைத்தொடர்பு நுழைவாயில் மூலம் அனுப்பப்படும் நேரடி எஸ்எம்எஸ்',
+        smsMsgTitle: '[மண்டிசின்க்] டோக்கன் உறுதி:',
+        smsMsgBody: 'உங்கள் டோக்கன் #TKN-KNL-01-001 (கோதுமை, 40 குவிண்டால்) கர்னால் மண்டிக்கு உறுதி செய்யப்பட்டது. நேரம்: இன்று 08:30 AM, வரிசை: #1.',
+        analyticsTitle: 'கொள்ளளவு மற்றும் பகுப்பாய்வு',
+        analyticsSubtitle: 'மண்டிசின்க் பயன்பாட்டிற்கு முன் மற்றும் பின் வருகை ஒப்பீடு',
+        stat1Title: 'நெரிசல் குறைவு',
+        stat1Sub: 'தடையில்லா செயல்பாடு',
+        stat2Title: 'எடை மேடை பயன்பாடு',
+        stat2Sub: 'தொடர் எடை பதிவு',
+        stat3Title: 'சராசரி காத்திருப்பு நேரம்',
+        stat3Sub: '4.5 மணியிலிருந்து 18 நிமிடங்கள்',
+        stat4Title: 'தினசரி மண்டி வரத்து',
+        stat4Sub: 'சேமிப்பு உகந்தது',
+        chartTitle: 'மணிநேர வரத்து வரைபடம் (குவிண்டால்)',
+        deptTitle: 'வேளாண்மை மற்றும் விவசாயிகள் நல அமைச்சகம் • மண்டிசின்க்',
+        gatePassHeading: 'அங்கீகரிக்கப்பட்ட டிஜிட்டல் நுழைவுச்சீட்டு & வருமான சான்றிதழ்',
+        rcptFarmer: 'விவசாயி பெயர்:',
+        rcptPmk: 'PM-கிசான் எண்:',
+        rcptToken: 'டோக்கன் எண்:',
+        rcptProduce: 'பயிர் & தரம்:',
+        rcptMsp: 'MSP விலை:',
+        rcptNet: 'வங்கி கணக்கில் சேரும் தொகை:',
+        dbtSettlementNote: 'DBT தீர்வு: 48 மணி நேரத்தில் SBI வங்கி கணக்கில் (XXXXXXXX4821) பணம் சேரும்',
+        btnPrint: '🖨️ சான்றிதழை அச்சிடுக',
+        dbtTitle: '5-படி நேரடி பணப்பரிவர்த்தனை (DBT) பதிவு',
+        dbtAmount: '₹97,000.00 வங்கி கணக்கில் செலுத்தப்பட்டது',
+        creditedBadge: '✓ 100% செலுத்தப்பட்டது',
+        stage1: '✅ <strong>படி 1:</strong> கொள்முதல் எடை & தரம் சான்றளிக்கப்பட்டது (40.0 குவிண்டால் கோதுமை)',
+        stage2: '✅ <strong>படி 2:</strong> PFMS மத்திய தளத்திற்கு அனுப்பப்பட்டது (பேட்ச் #PFMS-2026-891)',
+        stage3: '✅ <strong>படி 3:</strong> NPCI ஆதார் வங்கி கணக்கு சரிபார்க்கப்பட்டது (SBI)',
+        stage4: '✅ <strong>படி 4:</strong> ரிசர்வ் வங்கி NEFT தீர்வு நிறைவடைந்தது',
+        stage5: '✅ <strong>படி 5:</strong> விவசாயி வங்கி கணக்கில் பணம் வரவு வைக்கப்பட்டது (SMS அனுப்பப்பட்டது)',
+      },
+      pb: {
+        appName: 'ਮੰਡੀਸਿੰਕ (MANDISYNC)',
+        appSubtitle: 'ਸਮਾਰਟ ਖਰੀਦ ਪ੍ਰਬੰਧਨ ਅਤੇ ਟੈਲੀਫੋਨੀ ਪ੍ਰਣਾਲੀ',
+        sihHeader: 'SIH26032 • ਮੰਡੀਸਿੰਕ | ਮੁਲਾਂਕਣ ਭੂਮਿਕਾ:',
+        roleFarmer: '🌾 ਕਿਸਾਨ ਵੀਰ',
+        roleOperator: '📋 ਕਤਾਰ ਆਪਰੇਟਰ',
+        roleManager: '🏛️ ਮੰਡੀ ਮੈਨੇਜਰ',
+        roleQuality: '🧪 ਗੁਣਵੱਤਾ ਅਧਿਕਾਰੀ',
+        roleWeigh: '⚖️ ਧਰਮਕੰਡਾ',
+        roleFinance: '💳 ਵਿੱਤ ਅਧਿਕਾਰੀ',
+        navFarmer: 'ਕਿਸਾਨ ਪੋਰਟਲ',
+        navQueue: 'ਲਾਈਵ ਮੰਡੀ ਬੋਰਡ',
+        navIvr: 'ਫੋਨ IVR ਹੈਲਪਲਾਈਨ',
+        navAnalytics: 'ਸਮਰੱਥਾ ਵਿਸ਼ਲੇਸ਼ਣ',
+        navReceipt: 'ਡਿਜੀਟਲ ਗੇਟ ਪਾਸ',
+        navPayment: 'DBT ਖਾਤਾ',
+        farmerName: 'ਰਮੇਸ਼ ਕੁਮਾਰ ਚੌਧਰੀ',
+        farmerSub: 'ਪੀਐਮ-ਕਿਸਾਨ: PMK-HR-8910234 • ਪਿੰਡ ਤਰਾਵੜੀ, ਕਰਨਾਲ',
+        verifiedBadge: '✓ 100% ਤਸਦੀਕਸ਼ੁਦਾ',
+        landLabel: 'ਤਸਦੀਕਸ਼ੁਦਾ ਜ਼ਮੀਨ:',
+        capLabel: 'ਵੱਧ ਤੋਂ ਵੱਧ ਝਾੜ ਹੱਦ:',
+        aadhaarLabel: 'ਆਧਾਰ:',
+        activeTokenTitle: 'ਐਕਟਿਵ ਟੋਕਨ #TKN-KNL-01-001',
+        counterStatus: 'ਕਾਊਂਟਰ #1 ਤੇ ਸੱਦਿਆ ਗਿਆ',
+        tokenDetails: '40.0 ਕੁਇੰਟਲ ਕਣਕ • ਕਰਨਾਲ ਮੰਡੀ • ਸਮਾਂ: ਅੱਜ 08:30 AM',
+        btnViewReceipt: 'ਡਿਜੀਟਲ ਗੇਟ ਪਾਸ ਵੇਖੋ',
+        btnTrackQueue: 'ਲਾਈਵ ਕਤਾਰ ਟਰੈਕ ਕਰੋ',
+        bookFormTitle: 'ਸਮਾਰਟ ਸਲਾਟ ਬੁਕਿੰਗ ਅਤੇ ਫਰਜ਼ੀ ਬੁਕਿੰਗ ਰੋਕਥਾਮ',
+        labelCrop: 'ਫ਼ਸਲ ਚੁਣੋ (ਐਮਐਸਪੀ ਗਾਰੰਟੀਸ਼ੁਦਾ):',
+        optWheat: 'ਕਣਕ (Wheat) - ₹2,425/ਕੁਇੰਟਲ',
+        optPaddy: 'ਝੋਨਾ (Paddy) - ₹2,320/ਕੁਇੰਟਲ',
+        optMustard: 'ਸਰ੍ਹੋਂ (Mustard) - ₹5,650/ਕੁਇੰਟਲ',
+        optGram: 'ਛੋਲੇ (Gram) - ₹5,440/ਕੁਇੰਟਲ',
+        labelQty: 'ਮਾਤਰਾ (ਕੁਇੰਟਲ):',
+        labelSlot: 'ਸਲਾਟ ਸਮਾਂ ਚੁਣੋ:',
+        optSlot1: 'ਕੱਲ੍ਹ: 08:00 - 09:30 AM (ਖਾਲੀ: 60 ਕੁਇੰਟਲ)',
+        optSlot2: 'ਕੱਲ੍ਹ: 09:30 - 11:00 AM (ਖਾਲੀ: 75 ਕੁਇੰਟਲ)',
+        optSlot3: 'ਕੱਲ੍ਹ: 11:00 - 12:30 PM (ਖਾਲੀ: 50 ਕੁਇੰਟਲ)',
+        btnBookSlot: '⚡ ਸਮਾਰਟ ਸਲਾਟ ਬੁੱਕ ਕਰੋ ਅਤੇ ਟੋਕਨ ਲਵੋ',
+        queueTitle: 'ਕਰਨਾਲ ਕੇਂਦਰੀ ਮੰਡੀ • ਲਾਈਵ ਕਤਾਰ ਬੋਰਡ',
+        queueSubtitle: 'ਅਸਲ ਸਮੇਂ ਸੰਚਾਲਨ, ਆਟੋਮੈਟਿਕ ਕਾਊਂਟਰ ਸੱਦਾ ਅਤੇ ਸਵੈ-ਤਬਦੀਲੀ',
+        btnCallNext: '📢 ਅਗਲੇ ਟੋਕਨ ਨੂੰ ਕਾਊਂਟਰ ਤੇ ਸੱਦੋ',
+        btnAutoSwap: '🔄 ਦੇਰੀ ਨਾਲ ਆਉਣ ਵਾਲਿਆਂ ਲਈ ਸਵੈ-ਤਬਦੀਲੀ ਚਲਾਓ',
+        nowServingHeader: '🟢 ਕਾਊਂਟਰਾਂ ਤੇ ਜਾਂਚ ਜਾਰੀ',
+        countersActiveBadge: '4 ਕਾਊਂਟਰ ਚਾਲੂ',
+        servingItem1: '40 ਕੁਇੰਟਲ ਕਣਕ • ਕਾਊਂਟਰ #1',
+        waitingHeader: '👥 ਉਡੀਕ ਕਰ ਰਹੇ ਕਿਸਾਨ',
+        waitingBadge: '3 ਕਿਸਾਨ ਉਡੀਕ ਵਿੱਚ',
+        pos1: 'ਨੰਬਰ #1',
+        pos2: 'ਨੰਬਰ #2',
+        ivrTitle: 'ਫੋਨ IVR ਹੈਲਪਲਾਈਨ (Zero-UI)',
+        ivrSubtitle: 'ਬਿਨਾਂ ਸਮਾਰਟਫੋਨ ਵਾਲੇ ਕਿਸਾਨਾਂ ਲਈ ਆਵਾਜ਼ ਰਾਹੀਂ ਸਲਾਟ ਬੁਕਿੰਗ',
+        ivrCallStatus: '🟢 ਕਾਲ ਕਨੈਕਟ ਹੋ ਗਈ (1800-MANDISYNC)',
+        ivrPromptDefault: '<strong>[ਮੰਡੀਸਿੰਕ IVR ਆਵਾਜ਼ ਸੁਨੇਹਾ]:</strong><br><br>"ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ ਕਿਸਾਨ ਵੀਰ! ਮੰਡੀਸਿੰਕ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ। ਕਣਕ ਲਈ 1 ਦਬਾਓ। ਝੋਨੇ ਲਈ 2 ਦਬਾਓ। ਸਰ੍ਹੋਂ ਲਈ 3 ਦਬਾਓ। ਛੋਲਿਆਂ ਲਈ 4 ਦਬਾਓ।"',
+        smsInboxTitle: '💬 ਫੋਨ ਐਸਐਮਐਸ ਇਨਬਾਕਸ (+91 9876543210)',
+        smsInboxSub: 'ਟੈਲੀਕਾਮ ਗੇਟਵੇ ਵੱਲੋਂ ਭੇਜੇ ਗਏ ਆਟੋਮੈਟਿਕ ਐਸਐਮਐਸ',
+        smsMsgTitle: '[ਮੰਡੀਸਿੰਕ] ਟੋਕਨ ਪੁਸ਼ਟੀ:',
+        smsMsgBody: 'ਤੁਹਾਡਾ ਟੋਕਨ #TKN-KNL-01-001 (ਕਣਕ, 40 ਕੁਇੰਟਲ) ਕਰਨਾਲ ਮੰਡੀ ਲਈ ਬੁੱਕ ਹੋ ਗਿਆ ਹੈ। ਸਮਾਂ: ਅੱਜ 08:30 AM, ਕਤਾਰ: #1।',
+        analyticsTitle: 'ਮੰਡੀ ਸਮਰੱਥਾ ਅਤੇ ਖਰੀਦ ਵਿਸ਼ਲੇਸ਼ਣ',
+        analyticsSubtitle: 'ਮੰਡੀਸਿੰਕ ਤੋਂ ਪਹਿਲਾਂ ਅਤੇ ਬਾਅਦ ਦਾ ਆਮਦ ਤੁਲਨਾਤਮਕ ਗ੍ਰਾਫ',
+        stat1Title: 'ਭੀੜ ਵਿੱਚ ਕਮੀ',
+        stat1Sub: 'ਬਿਨਾਂ ਕਿਸੇ ਰੁਕਾਵਟ',
+        stat2Title: 'ਧਰਮਕੰਡਾ ਵਰਤੋਂ ਦਰ',
+        stat2Sub: 'ਲਗਾਤਾਰ ਤੋਲ',
+        stat3Title: 'ਔਸਤ ਕਿਸਾਨ ਉਡੀਕ',
+        stat3Sub: '4.5 ਘੰਟਿਆਂ ਤੋਂ ਘੱਟ ਕੇ 18 ਮਿੰਟ',
+        stat4Title: 'ਰੋਜ਼ਾਨਾ ਮੰਡੀ ਆਮਦ',
+        stat4Sub: 'ਸਮਰੱਥਾ ਅਨੁਕੂਲ',
+        chartTitle: 'ਪ੍ਰਤੀ ਘੰਟਾ ਆਮਦ ਗ੍ਰਾਫ (ਕੁਇੰਟਲ)',
+        deptTitle: 'ਖੇਤੀਬਾੜੀ ਅਤੇ ਕਿਸਾਨ ਭਲਾਈ ਮੰਤਰਾਲਾ • ਮੰਡੀਸਿੰਕ',
+        gatePassHeading: 'ਸਰਕਾਰੀ ਡਿਜੀਟਲ ਗੇਟ ਪਾਸ ਅਤੇ ਆਮਦਨ ਸਰਟੀਫਿਕੇਟ',
+        rcptFarmer: 'ਕਿਸਾਨ ਦਾ ਨਾਂ:',
+        rcptPmk: 'ਪੀਐਮ-ਕਿਸਾਨ ਆਈਡੀ:',
+        rcptToken: 'ਟੋਕਨ ਨੰਬਰ:',
+        rcptProduce: 'ਫ਼ਸਲ ਅਤੇ ਗ੍ਰੇਡ:',
+        rcptMsp: 'ਐਮਐਸਪੀ ਰੇਟ:',
+        rcptNet: 'ਕੁੱਲ ਬੈਂਕ ਖਾਤੇ ਵਿੱਚ ਰਕਮ:',
+        dbtSettlementNote: 'DBT ਭੁਗਤਾਨ: 48 ਘੰਟਿਆਂ ਅੰਦਰ ਸਿੱਧਾ SBI ਖਾਤੇ (XXXXXXXX4821) ਵਿੱਚ ਪੈਸੇ ਦੀ ਗਾਰੰਟੀ',
+        btnPrint: '🖨️ ਸਰਟੀਫਿਕੇਟ ਪ੍ਰਿੰਟ ਕਰੋ',
+        dbtTitle: '5-ਪੜਾਵੀ ਸਿੱਧਾ ਬੈਂਕ ਭੁਗਤਾਨ (DBT) ਲੇਖਾ',
+        dbtAmount: '₹97,000.00 ਖਾਤੇ ਵਿੱਚ ਜਮ੍ਹਾਂ',
+        creditedBadge: '✓ 100% ਜਮ੍ਹਾਂ ਹੋਏ',
+        stage1: '✅ <strong>ਪੜਾਅ 1:</strong> ਖਰੀਦ ਤੋਲ ਅਤੇ ਨਮੀ ਤਸਦੀਕ ਹੋਈ (40.0 ਕੁਇੰਟਲ ਕਣਕ)',
+        stage2: '✅ <strong>ਪੜਾਅ 2:</strong> PFMS ਪੋਰਟਲ ਤੇ ਭੇਜਿਆ ਗਿਆ (ਬੈਚ #PFMS-2026-891)',
+        stage3: '✅ <strong>ਪੜਾਅ 3:</strong> NPCI ਆਧਾਰ-ਬੈਂਕ ਖਾਤਾ ਤਸਦੀਕ ਪਾਸ (SBI)',
+        stage4: '✅ <strong>ਪੜਾਅ 4:</strong> ਆਰਬੀਆਈ NEFT ਬੈਂਕ ਕਲੀਅਰਿੰਗ ਮੁਕੰਮਲ',
+        stage5: '✅ <strong>ਪੜਾਅ 5:</strong> ਕਿਸਾਨ ਦੇ ਬੈਂਕ ਖਾਤੇ ਵਿੱਚ ਰਕਮ ਜਮ੍ਹਾਂ (SMS ਭੇਜਿਆ ਗਿਆ)',
+      }
+    };
+
+    let currentLang = 'hi';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      // Update Language Pills in header
+      document.querySelectorAll('.lang-pill').forEach(btn => btn.classList.remove('active'));
+      const activePill = document.getElementById(`lang-${lang}`);
+      if (activePill) activePill.classList.add('active');
+
+      const dict = translations[lang] || translations.en;
+
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Update IVR screen voice prompt based on selected language
+      const ivrScreen = document.getElementById('ivrScreen');
+      if (ivrScreen) {
+        ivrScreen.innerHTML = dict.ivrPromptDefault;
+      }
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetView = document.getElementById(viewId);
+      if (targetView) targetView.classList.add('active');
+
+      const targetBtn = document.getElementById(`btn-${viewId}`);
+      if (targetBtn) targetBtn.classList.add('active');
+    }
+
+    function switchRole(roleName) {
+      document.querySelectorAll('.role-badge').forEach(el => el.classList.remove('active'));
+      const activeRoleBadge = document.getElementById(`role-${roleName}`);
+      if (activeRoleBadge) activeRoleBadge.classList.add('active');
+
+      document.getElementById('currentRoleDisplay').innerText = roleName;
+
+      if (roleName === 'OPERATOR') switchView('queue-view');
+      else if (roleName === 'MANAGER') switchView('analytics-view');
+      else if (roleName === 'FINANCE') switchView('payment-view');
+      else if (roleName === 'QUALITY') switchView('farmer-view');
+      else if (roleName === 'WEIGH') switchView('farmer-view');
+      else switchView('farmer-view');
+    }
+
+    let ivrStep = 1;
+    function pressIvrKey(key) {
+      const screen = document.getElementById('ivrScreen');
+      const inbox = document.getElementById('smsInbox');
+      const dict = translations[currentLang] || translations.hi;
+
+      if (ivrStep === 1) {
+        if (currentLang === 'en') {
+          screen.innerHTML = `<strong>[Key ${key} Pressed]:</strong> Crop selected: Wheat. Please enter quantity in quintals followed by # (e.g. 50#).`;
+        } else if (currentLang === 'ta') {
+          screen.innerHTML = `<strong>[பொத்தான் ${key} அழுத்தப்பட்டது]:</strong> பயிர்: கோதுமை தேர்ந்தெடுக்கப்பட்டது. அளவை உள்ளிடவும் (उदा. 50#).`;
+        } else if (currentLang === 'pb') {
+          screen.innerHTML = `<strong>[ਕੀਅ ${key} ਦਬਾਈ ਗਈ]:</strong> ਕਣਕ ਚੁਣੀ ਗਈ। ਮਾਤਰਾ ਦਰਜ ਕਰੋ (ਜਿਵੇਂ 50#)।`;
+        } else {
+          screen.innerHTML = `<strong>[की ${key} दबाई गई]:</strong> गेहूं चुना गया। मात्रा क्विंटल में दर्ज करें (उदा. 50#)।`;
+        }
+        ivrStep = 2;
+      } else if (ivrStep === 2) {
+        if (currentLang === 'en') {
+          screen.innerHTML = `<strong>[Key ${key} Pressed]:</strong> 40 Quintals confirmed. Smart slot booked!<br><br><strong>Token #TKN-KNL-01-002 issued.</strong>`;
+        } else if (currentLang === 'ta') {
+          screen.innerHTML = `<strong>[பொத்தான் ${key} அழுத்தப்பட்டது]:</strong> 40 குவிண்டால் உறுதி செய்யப்பட்டது. இடம் முன்பதிவு செய்யப்பட்டது!<br><br><strong>டோக்கன் #TKN-KNL-01-002 வழங்கப்பட்டது.</strong>`;
+        } else if (currentLang === 'pb') {
+          screen.innerHTML = `<strong>[ਕੀਅ ${key} ਦਬਾਈ ਗਈ]:</strong> 40 ਕੁਇੰਟਲ ਪੱਕਾ ਹੋਇਆ। ਸਲਾਟ ਬੁੱਕ ਹੋ ਗਿਆ!<br><br><strong>ਟੋਕਨ #TKN-KNL-01-002 ਜਾਰੀ।</strong>`;
+        } else {
+          screen.innerHTML = `<strong>[की ${key} दबाई गई]:</strong> 40 क्विंटल दर्ज हुआ। स्लॉट बुक हो गया है!<br><br><strong>टोकन #TKN-KNL-01-002 जारी।</strong>`;
+        }
+
+        const newMsg = document.createElement('div');
+        newMsg.style = 'padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; font-size: 0.85rem; margin-top: 8px;';
+        newMsg.innerHTML = `<div style="font-weight: 800; color: #166534;">${dict.smsMsgTitle}</div> ${dict.smsMsgBody.replace('01-001', '01-002').replace('08:30', '09:30').replace('#1', '#2')}`;
+        inbox.prepend(newMsg);
+        ivrStep = 1;
+      }
+    }
+
+    function callNextToken() {
+      const messages = {
+        en: '📢 Calling next token #TKN-KNL-01-002 to Counter #1! Automated SMS dispatched.',
+        hi: '📢 अगले टोकन #TKN-KNL-01-002 को काउंटर #1 पर बुलाया गया! किसान को तत्काल एसएमएस भेजा गया।',
+        ta: '📢 அடுத்த டோக்கன் #TKN-KNL-01-002 கவுண்டர் #1-க்கு அழைக்கப்பட்டது! எஸ்எம்எஸ் அனுப்பப்பட்டது.',
+        pb: '📢 ਅਗਲੇ ਟੋਕਨ #TKN-KNL-01-002 ਨੂੰ ਕਾਊਂਟਰ #1 ਤੇ ਸੱਦਿਆ ਗਿਆ! ਕਿਸਾਨ ਨੂੰ ਐਸਐਮਐਸ ਭੇਜਿਆ ਗਿਆ।'
+      };
+      alert(messages[currentLang] || messages.hi);
+    }
+
+    function autoSwapDelayed() {
+      const messages = {
+        en: '🔄 Auto-Swap Engine: Late arrivals scanned. Reordered 1 slot and broadcasted SMS update without penalty.',
+        hi: '🔄 कतार स्वतः-समायोजन: विलंबित आगमन स्कैन किए गए। 1 स्लॉट को पुनः व्यवस्थित किया गया और बिना जुर्माने के एसएमएस भेजा गया।',
+        ta: '🔄 தானியங்கி மாற்றம்: தாமதமான டோக்கன்கள் சரிசெய்யப்பட்டு புதிய நேரம் எஸ்எம்எஸ் மூலம் தெரிவிக்கப்பட்டது.',
+        pb: '🔄 ਸਵੈ-ਤਬਦੀਲੀ ਇੰਜਨ: ਦੇਰੀ ਵਾਲੇ ਸਲਾਟ ਬਦਲੇ ਗਏ ਅਤੇ ਬਿਨਾਂ ਜੁਰਮਾਨੇ ਦੇ ਨਵਾਂ ਸਮਾਂ ਐਸਐਮਐਸ ਰਾਹੀਂ ਭੇਜਿਆ ਗਿਆ।'
+      };
+      alert(messages[currentLang] || messages.hi);
+    }
+
+    function simulateBooking() {
+      const crop = document.getElementById('bookCrop').value;
+      const qty = document.getElementById('bookQty').value;
+      const messages = {
+        en: `✓ Smart Slot Confirmed! Token #TKN-KNL-01-042 issued for ${qty} Qtl ${crop}. SMS sent!`,
+        hi: `✓ स्मार्ट स्लॉट सुरक्षित! ${qty} क्विंटल ${crop} हेतु टोकन #TKN-KNL-01-042 जारी। एसएमएस प्रेषਿਤ!`,
+        ta: `✓ முன்பதிவு உறுதி செய்யப்பட்டது! ${qty} குவிண்டால் ${crop} பயிருக்கு டோக்கன் #TKN-KNL-01-042 வழங்கப்பட்டது!`,
+        pb: `✓ ਸਲਾਟ ਪੱਕਾ ਹੋ ਗਿਆ! ${qty} ਕੁਇੰਟਲ ${crop} ਲਈ ਟੋਕਨ #TKN-KNL-01-042 ਜਾਰੀ ਕੀਤਾ ਗਿਆ!`
+      };
+      alert(messages[currentLang] || messages.hi);
+      switchView('receipt-view');
+    }
+
+    // Initialize in Hindi on first load
+    window.addEventListener('DOMContentLoaded', () => {
+      setLanguage('hi');
+    });
+  </script>
+</body>
+</html>
