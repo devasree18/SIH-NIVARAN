@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mandisync_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mandisync_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mandisync_secure_pwd_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-mandisync_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mandisync_admin -d mandisync_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mandisync_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: mandisync_backend
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mandisync_admin}:${POSTGRES_PASSWORD:-mandisync_secure_pwd_2026}@postgres:5432/${POSTGRES_DB:-mandisync_db}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-mandisync_jwt_super_secret_key_sih2026}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-AC_MOCK_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-MOCK_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER:-+18006263479}
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: mandisync_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
