@@ -1,0 +1,44 @@
+name: mandisync_farmer_app
+description: "MandiSync - Smart Agricultural Procurement & Zero-UI Telephony Mobile App for Farmers (Nivaran Labs - SIH26032)"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  
+  # State Management & Architecture
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.2.0
+  
+  # Networking & HTTP
+  dio: ^5.4.3+1
+  http: ^1.2.1
+  
+  # Internationalization & Formatting
+  intl: ^0.19.0
+  
+  # QR Codes & Digital Gate Pass
+  qr_flutter: ^4.1.0
+  
+  # Local Storage & Security
+  shared_preferences: ^2.2.3
+  flutter_secure_storage: ^9.0.0
+  
+  # UI & Material 3 Icons
+  lucide_icons: ^0.257.0
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
