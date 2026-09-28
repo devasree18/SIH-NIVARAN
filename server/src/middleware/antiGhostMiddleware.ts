@@ -19,7 +19,18 @@ export async function antiGhostProtection(req: Request, res: Response, next: Nex
       });
     }
 
-    const isDemoSession = process.env.NODE_ENV !== 'production' && Boolean(req.user?.farmerId);
+    // Authenticated farmers are already verified by JWT and should not be blocked by the
+    // generic anti-ghost rate-limit during normal workflow use. The quota still applies to
+    // anonymous or unverified requests.
+    if (req.user?.farmerId || req.user?.role === 'FARMER') {
+      const farmer = await prisma.farmer.findUnique({
+        where: { farmerId: req.user?.farmerId || effectiveFarmerId },
+      });
+
+      if (farmer && farmer.isActive) {
+        return next();
+      }
+    }
 
     // 1. Check Rate-Limiting Verification Record in Database
     let verification = await prisma.antiGhostVerification.findFirst({
@@ -32,61 +43,50 @@ export async function antiGhostProtection(req: Request, res: Response, next: Nex
     const now = new Date();
 
     if (verification) {
-      if (isDemoSession) {
+      // Check if blocked due to excessive ghost requests
+      if (verification.blockedUntil && verification.blockedUntil > now) {
+        return res.status(429).json({
+          success: false,
+          error: `Anti-Ghost Security Lock: Excessive booking attempts detected for ${identifier}. Locked until ${verification.blockedUntil.toLocaleTimeString()}.`,
+        });
+      }
+
+      // Check request count within 24 hour window
+      const windowHours = (now.getTime() - new Date(verification.rateLimitWindow).getTime()) / (1000 * 60 * 60);
+
+      if (windowHours < 24) {
+        if (verification.requestCount24h >= 5) {
+          // Exceeded 24h quota - Lock for 6 hours
+          const blockUntil = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+          await prisma.antiGhostVerification.update({
+            where: { id: verification.id },
+            data: { blockedUntil: blockUntil },
+          });
+
+          return res.status(429).json({
+            success: false,
+            error: `Anti-Ghost Security Limit Reached: Maximum 5 daily token requests allowed per verified PM-Kisan account.`,
+          });
+        }
+
+        // Increment attempt count
         await prisma.antiGhostVerification.update({
           where: { id: verification.id },
           data: {
-            requestCount24h: Math.max(1, verification.requestCount24h),
+            requestCount24h: verification.requestCount24h + 1,
             attemptsCount: verification.attemptsCount + 1,
-            blockedUntil: null,
           },
         });
       } else {
-        // Check if blocked due to excessive ghost requests
-        if (verification.blockedUntil && verification.blockedUntil > now) {
-          return res.status(429).json({
-            success: false,
-            error: `Anti-Ghost Security Lock: Excessive booking attempts detected for ${identifier}. Locked until ${verification.blockedUntil.toLocaleTimeString()}.`,
-          });
-        }
-
-        // Check request count within 24 hour window
-        const windowHours = (now.getTime() - new Date(verification.rateLimitWindow).getTime()) / (1000 * 60 * 60);
-
-        if (windowHours < 24) {
-          if (verification.requestCount24h >= 5) {
-            // Exceeded 24h quota - Lock for 6 hours
-            const blockUntil = new Date(now.getTime() + 6 * 60 * 60 * 1000);
-            await prisma.antiGhostVerification.update({
-              where: { id: verification.id },
-              data: { blockedUntil: blockUntil },
-            });
-
-            return res.status(429).json({
-              success: false,
-              error: `Anti-Ghost Security Limit Reached: Maximum 5 daily token requests allowed per verified PM-Kisan account.`,
-            });
-          }
-
-          // Increment attempt count
-          await prisma.antiGhostVerification.update({
-            where: { id: verification.id },
-            data: {
-              requestCount24h: verification.requestCount24h + 1,
-              attemptsCount: verification.attemptsCount + 1,
-            },
-          });
-        } else {
-          // Reset window
-          await prisma.antiGhostVerification.update({
-            where: { id: verification.id },
-            data: {
-              rateLimitWindow: now,
-              requestCount24h: 1,
-              blockedUntil: null,
-            },
-          });
-        }
+        // Reset window
+        await prisma.antiGhostVerification.update({
+          where: { id: verification.id },
+          data: {
+            rateLimitWindow: now,
+            requestCount24h: 1,
+            blockedUntil: null,
+          },
+        });
       }
     } else {
       // Create fresh verification record
