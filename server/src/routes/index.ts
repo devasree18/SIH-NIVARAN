@@ -20,6 +20,7 @@ import { auditController } from '../controllers/auditController';
 import { ivrController } from '../controllers/ivrController';
 import { antiGhostProtection } from '../middleware/antiGhostMiddleware';
 import { procurementPipelineController } from '../controllers/procurementPipelineController';
+import { dashboardController } from '../controllers/dashboardController';
 
 const router = Router();
 

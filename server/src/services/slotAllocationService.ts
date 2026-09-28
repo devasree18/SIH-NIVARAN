@@ -231,4 +231,8 @@ export const slotAllocationService = {
       isDuplicate: false,
     };
   },
+
+  async allocateSmartSlot(params: BookSlotRequest) {
+    return this.bookSlot(params);
+  },
 };
