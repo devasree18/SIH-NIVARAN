@@ -35,7 +35,7 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
   };
 
   it('allows an authenticated farmer to book a slot dynamically', async () => {
-    const testDate = getUniqueDate();
+    const testDate = new Date(Date.now() + 86400000 * 30).toISOString().slice(0, 10);
     const centre = await prisma.procurementCentre.findFirst();
     const slot = await prisma.slot.upsert({
       where: {
