@@ -34,6 +34,54 @@ describe('SIH-NIVARAN Procurement Management Test Suite', () => {
     return `2026-11-${day}`;
   };
 
+  it('allows an authenticated farmer to book a slot dynamically', async () => {
+    const testDate = getUniqueDate();
+    const centre = await prisma.procurementCentre.findFirst();
+    const slot = await prisma.slot.upsert({
+      where: {
+        centreId_date_startTime: {
+          centreId: centre!.id,
+          date: testDate,
+          startTime: '10:00',
+        },
+      },
+      update: {
+        capacity: 40.0,
+        availableQuantity: 40.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+      create: {
+        centreId: centre!.id,
+        date: testDate,
+        startTime: '10:00',
+        endTime: '11:00',
+        capacity: 40.0,
+        availableQuantity: 40.0,
+        reservedQuantity: 0.0,
+        bookedFarmerCount: 0,
+        slotStatus: 'AVAILABLE',
+      },
+    });
+
+    const res = await request(app)
+      .post('/api/v1/bookings')
+      .set('Authorization', `Bearer ${farmerToken}`)
+      .send({
+        centreId: centre!.id,
+        crop: 'Wheat',
+        requestedQuantity: 12.5,
+        preferredDate: testDate,
+        slotId: slot.id,
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.booking).toBeTruthy();
+    expect(res.body.data.booking.tokenId).toMatch(/TKN-/);
+  });
+
   // 1. Farmer Registration & Duplicate Prevention
   it('1. Rejects farmer registration with duplicate mobile number or username', async () => {
     const duplicateRes = await request(app)

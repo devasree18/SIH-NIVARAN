@@ -4,7 +4,13 @@ import { prisma } from '../prisma';
 export async function antiGhostProtection(req: Request, res: Response, next: NextFunction) {
   try {
     const { farmerId, mobileNumber, pmKisanId, requestedQuantity } = req.body;
-    const identifier = farmerId || pmKisanId || mobileNumber || req.user?.username;
+
+    if (req.user?.farmerId && !farmerId) {
+      req.body.farmerId = req.user.farmerId;
+    }
+
+    const effectiveFarmerId = req.body.farmerId || farmerId;
+    const identifier = effectiveFarmerId || pmKisanId || mobileNumber || req.user?.username || req.user?.id;
 
     if (!identifier) {
       return res.status(400).json({

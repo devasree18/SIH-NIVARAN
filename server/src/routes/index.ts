@@ -62,6 +62,7 @@ router.post(
 // 5. BOOKINGS & TOKENS (WITH ANTI-GHOST PROTECTION)
 router.post(
   '/bookings',
+  authenticateToken,
   antiGhostProtection,
   bookingController.createBooking
 );
